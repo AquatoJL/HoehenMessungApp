@@ -1,11 +1,7 @@
-ScreenManager:
-    CameraScreen:
-        name: 'camera'
+<MyLayout>
+    orientation: 'vertical'
+    size: root.width, root.height
 
-<CameraScreen>:
-    FloatLayout:
-        Camera:
-            id: camera
-            play: True
-            resolution: (1280, 720)
-            size_hint: 1, 1
+    AndroidCamera:
+        fit_mode: 'contain'
+        play: True
