@@ -1,15 +1,15 @@
 [app]
-title = Hohenmessung App
-package.name = hohenmessung
+title = Kamera App
+package.name = camera
 package.domain = org.example
 
 source.dir = .
 source.include_exts = py,png,jpg,kv,atlas,json
 
-version = 0.1
+version = 0.2
 requirements = python3,kivy,plyer
 
-orientation = portrait
+orientation = sensor
 fullscreen = 0
 android.archs = arm64-v8a
 
@@ -22,10 +22,11 @@ ios.ios_deploy_branch = 1.7.0
 [buildozer]
 log_level = 2
 
-android.permissions = CAMERA,WRITE_EXTERNAL_STORAGE,VIBRATE
+android.permissions = CAMERA,WRITE_EXTERNAL_STORAGE,VIBRATE,INTERNET
 
 android.api = 33
 android.minapi = 21
 android.ndk = 25b
 
+android.accept_sdk_license = True
 android.enable_androidx = True
