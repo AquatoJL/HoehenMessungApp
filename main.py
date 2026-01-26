@@ -1,23 +1,24 @@
-from kivy.uix.screenmanager import Screen, ScreenManager
-from kivy.lang import Builder
 from kivy.app import App
-
-# Android Permissions
-try:
-    from android.permissions import request_permissions, Permission
-    request_permissions([Permission.CAMERA])
-except ImportError:
-    pass
-
-class CameraScreen(Screen):
-    pass
+from kivy.uix.camera import Camera
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
 
 class CameraApp(App):
     def build(self):
-        Builder.load_file('main.kv')
-        ms = ScreenManager()
-        ms.add_widget(CameraScreen(name='camera'))
-        return ms
+        layout = BoxLayout(orientation='vertical')
+        self.camera = Camera(play=True)
+        self.camera.resolution = (640, 480)
+        
+        btn = Button(text="Foto machen", size_hint=(1, 0.2))
+        btn.bind(on_press=self.take_picture)
+        
+        layout.add_widget(self.camera)
+        layout.add_widget(btn)
+        return layout
+
+    def take_picture(self, *args):
+        self.camera.export_to_png("foto.png")
+        print("Foto gespeichert")
 
 if __name__ == '__main__':
     CameraApp().run()
