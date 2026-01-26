@@ -1,13 +1,18 @@
 from kivy.app import App
-from kivy.uix.boxlayout import BoxLayout
-from kivy.garden.xcamera import XCamera
+from kivy.lang import Builder
+from camera4kivy import Preview
 
-class CameraApp(App):
+class Camera4KivyApp(App):
     def build(self):
-        layout = BoxLayout()
-        self.camera = XCamera(play=True)
-        layout.add_widget(self.camera)
-        return layout
+        root = Builder.load_file("main.kv")
+        self.preview = root.ids.preview
+        return root
 
-if __name__ == '__main__':
-    CameraApp().run()
+    def on_start(self):
+        self.preview.connect_camera(camera_id='0')
+
+    def on_stop(self):
+        self.preview.disconnect_camera()
+
+if __name__ == "__main__":
+    Camera4KivyApp().run()

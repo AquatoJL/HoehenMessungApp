@@ -1,25 +1,25 @@
 [app]
-title = Hohenmessung Kamera
-package.name = hohenmessung_kamera
-package.domain = org.example
+
+title = Kivy Kamera
+package.name = kamera
+package.domain = gsog.eigeneDomain
 
 source.dir = .
-source.include_exts = py,kv,png,jpg
+source.include_exts = py,png,jpg,kv,atlas
 
 version = 0.1
-requirements = python3,kivy,cython
+requirements = python3,kivy,camera4kivy,opencv-python
 
-p4a.requirements = python3,kivy,android
-
+orientation = portrait
+fullscreen = 0
+android.archs = arm64-v8a
 android.permissions = CAMERA,WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE
 
-android.api = 33
-android.minapi = 21
-android.ndk = 25b
+# iOS specific
+ios.kivy_ios_url = https://github.com/kivy/kivy-ios
+ios.kivy_ios_branch = main
+ios.ios_deploy_url = https://github.com/phonegap/ios-deploy
+ios.ios_deploy_branch = 1.7.0
 
-android.enable_androidx = True
-
-p4a.branch = master
-
-# garden requirement
-p4a.local_recipes = ./recipes
+[buildozer]
+log_level = 2
