@@ -1,10 +1,11 @@
 [app]
-title = Hohenmessung App
+title = Höhenmessung
 package.name = hohenmessung
 package.domain = org.example
 
 source.dir = .
 source.include_exts = py,png,jpg,kv,atlas,json
+icon.filename = %(source.dir)s/icons/camera_red.png
 
 version = 0.1
 requirements = python3,kivy,plyer
