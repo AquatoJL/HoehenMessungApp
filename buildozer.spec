@@ -9,7 +9,7 @@ source.include_exts = py,png,jpg,kv,atlas,json
 version = 0.2
 requirements = python3,kivy,plyer
 
-orientation = sensor
+orientation = portrait
 fullscreen = 0
 android.archs = arm64-v8a
 
