@@ -1,7 +1,30 @@
 #:kivy 2.3.1
 
 BoxLayout:
-    orientation: "vertical"
+    orientation: 'vertical'
+    
     Preview:
         id: preview
-        aspect_ratio: "16:9"
+        canvas_instructions_callback: app.draw_canvas
+        file_callback: app.file_callback
+    
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint_y: 0.15
+        spacing: 10
+        padding: 10
+        
+        Button:
+            text: 'Foto'
+            background_color: 0, 1, 0, 1
+            on_press: app.capture_photo()
+        
+        Button:
+            text: 'Screenshot'
+            background_color: 0, 0.7, 1, 1
+            on_press: app.capture_screenshot()
+        
+        Button:
+            text: 'Exit'
+            background_color: 1, 0, 0, 1
+            on_press: app.stop()
