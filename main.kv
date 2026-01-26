@@ -1,108 +1,11 @@
-#:kivy 2.3.1
-
 ScreenManager:
-    MeasureScreen:
-        name: 'measure'
-    SettingsScreen:
-        name: 'settings'
+    CameraScreen:
+        name: 'camera'
 
-<MeasureScreen>:
+<CameraScreen>:
     FloatLayout:
         Camera:
             id: camera
             play: True
+            resolution: (1280, 720)
             size_hint: 1, 1
-        
-        CrosshairWidget:
-            id: crosshair
-            size_hint: None, None
-            size: 100, 100
-            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-        
-        BoxLayout:
-            id: info
-            orientation: 'vertical'
-            size_hint: 0.3, 0.4
-            pos_hint: {'right': 1, 'top': 1}
-            spacing: 10
-            padding: 10
-            Label:
-                id: distance_lbl
-                text: 'Entfernung: 0 m'
-                font_size: '18sp'
-            Label:
-                id: height_lbl
-                text: 'Höhe: 0 m'
-                font_size: '18sp'
-            Label:
-                id: angle_lbl
-                text: 'Winkel: 0°'
-                font_size: '18sp[file:1]'
-        
-        BoxLayout:
-            orientation: 'horizontal'
-            size_hint: 0.3, 0.15
-            pos_hint: {'right': 1, 'y': 0}
-            spacing: 5
-            padding: 5
-            Button:
-                text: 'Anker setzen'
-                on_press: root.set_anchor()
-            Button:
-                text: 'Fokus'
-                on_press: root.focus_camera()
-            Button:
-                text: 'Screenshot'
-                on_press: root.take_screenshot()
-            Button:
-                text: 'Einstellungen'
-                on_press: app.root.current = 'settings'
-
-<SettingsScreen>:
-    GridLayout:
-        cols: 1
-        padding: 20
-        spacing: 15
-        size_hint: 0.8, 0.8
-        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-        
-        Label:
-            text: 'Einstellungen'
-            font_size: '24sp'
-            size_hint_y: None
-            height: '50dp'
-        
-        Label:
-            text: 'Höhe des Telefons (m):'
-            size_hint_y: None
-            height: '40dp'
-        
-        TextInput:
-            id: phone_height
-            text: '1.6'
-            multiline: False
-            input_filter: 'float'
-            font_size: '18sp'
-        
-        Button:
-            text: 'Manuelle Kalibrierung'
-            size_hint_y: None
-            height: '50dp'
-        
-        Button:
-            text: 'Automatische Kalibrierung'
-            size_hint_y: None
-            height: '50dp'
-        
-        Button:
-            text: 'Speichern'
-            on_press: root.save_config()
-            size_hint_y: None
-            height: '50dp'
-            background_color: 0, 1, 0, 1
-        
-        Button:
-            text: 'Zurück zur Messung'
-            on_press: app.root.current = 'measure'
-            size_hint_y: None
-            height: '50dp'
