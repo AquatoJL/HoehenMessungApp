@@ -10,7 +10,7 @@ import cv2
 
 CameraInfo = autoclass('android.hardware.Camera$CameraInfo')
 CAMERA_INDEX = {'front': CameraInfo.CAMERA_FACING_FRONT, 'back': CameraInfo.CAMERA_FACING_BACK}
-Builder.load_file("main.kv")
+Builder.load_file("myapplayout.kv")
 
 
 class AndroidCamera(Camera):
