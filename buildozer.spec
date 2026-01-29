@@ -1,21 +1,11 @@
 [app]
-<<<<<<< HEAD
-title = Höhenmessung
-package.name = hohenmessung
-=======
 title = Photo Capture
 package.name = photocapture
->>>>>>> a11696d3c0430c7b48fa896d82828694f4b7fc6b
 package.domain = org.example
 
-icon.filename = %(source.dir)s/icons/camera_red.png
 source.dir = .
-<<<<<<< HEAD
 source.include_exts = py,png,jpg,kv,atlas,json
 icon.filename = %(source.dir)s/icons/camera_red.png
-=======
-source.include_exts = py,png,jpg,kv,atlas
->>>>>>> a11696d3c0430c7b48fa896d82828694f4b7fc6b
 
 version = 0.1
 
