@@ -1,13 +1,18 @@
-#:kivy 2.3.1
-
-BoxLayout:
+<CameraScreen>:
     orientation: 'vertical'
+    
+    canvas.before:
+        Color:
+            rgba: 0, 0, 0, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
     
     Preview:
         id: preview
-        canvas_instructions_callback: app.draw_canvas
-        file_callback: app.file_callback
-    
+        letterbox_color: 0, 0, 0, 1
+        size_hint: 1, 1
+
     BoxLayout:
         orientation: 'horizontal'
         size_hint_y: 0.15
@@ -20,11 +25,11 @@ BoxLayout:
             on_press: app.capture_photo()
         
         Button:
-            text: 'Screenshot'
+            text: 'Foto'
             background_color: 0, 0.7, 1, 1
-            on_press: app.capture_screenshot()
+            on_press: app.capture_photo()
         
         Button:
             text: 'Exit'
             background_color: 1, 0, 0, 1
-            on_press: app.stop()
+            on_press: app.capture_photo()

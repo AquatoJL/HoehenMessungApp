@@ -1,6 +1,6 @@
 [app]
-title = Photo Capture
-package.name = photocapture
+title = Messung
+package.name = measure
 package.domain = org.example
 
 source.dir = .
