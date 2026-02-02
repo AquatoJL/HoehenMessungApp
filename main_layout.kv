@@ -1,0 +1,225 @@
+<Crosshair@MDWidget>:
+    disabled: True
+    size_hint: None, None
+    size: dp(60), dp(60)
+    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+    canvas:
+        Color:
+            rgba: 1,1,1,1
+        Line:
+            width: 2
+            points: root.center_x - root.width / 2, root.center_y, root.center_x + root.width / 2, root.center_y
+        Line:
+            width: 2
+            points: root.center_x, root.center_y - root.height / 2, root.center_x, root.center_y + root.height / 2
+
+        Color:
+            rgba: 0,0,0,1
+        Line:
+            width: 1
+            points: root.center_x - root.width / 2, root.center_y, root.center_x + root.width / 2, root.center_y
+        Line:
+            width: 1
+            points: root.center_x, root.center_y - root.height / 2, root.center_x, root.center_y + root.height / 2
+
+<OwnIcon@MDIcon>
+    theme_icon_color: "Custom"
+    icon_color: 1, 1, 1, 1    
+    font_size: '35sp'
+    valign: "middle"
+    halign: "center"
+    text_size: self.size
+
+<OwnLabel@MDLabel>
+    theme_text_color: "Custom"
+    text_color: 1, 1, 1, 1
+    valign: "middle"
+    halign: "center"
+    text_size: self.size
+
+<CameraScreen>:
+    orientation: 'vertical'
+    
+    Preview:
+        id: preview
+        letterbox_color: 1, 0, 0, 1
+        size_hint: 1, 1
+
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint_y: 0.15
+        spacing: 10
+        padding: 10
+        
+        Button:
+            text: 'Foto'
+            background_color: 0, 1, 0, 1
+            on_press: app.capture_photo()
+        
+        Button:
+            text: 'Foto'
+            background_color: 0, 0.7, 1, 1
+            on_press: app.capture_photo()
+        
+        Button:
+            text: 'Exit'
+            background_color: 1, 0, 0, 1
+            on_press: app.capture_photo()
+
+AppFloatLayout:
+    CameraScreen:
+
+    Crosshair:
+    
+    GridLayout:
+        rows: 6
+        size_hint: None, None
+        height: dp(90)
+        width: dp(250)
+        spacing: dp(8)
+        pos_hint: {"center_x": 0.2, "center_y": 0.9}
+        row_force_default: True
+        row_default_height: dp(24)
+
+        canvas.before:
+            Color:
+                rgba: 0.459, 0.459, 0.459, 0.271
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [12]
+
+        Label:
+            text: root.accelX
+            font_size: '20sp'            
+
+        Label:
+            text: root.accelY
+            font_size: '20sp'
+
+        Label:
+            text: root.accelZ
+            font_size: '20sp'
+
+        Label:
+            text: root.spatialAzimuth
+            font_size: '20sp'
+
+        Label:
+            text: root.spatialPitch
+            font_size: '20sp'
+
+        Label:
+            text: root.spatialRoll
+            font_size: '20sp'
+
+    GridLayout:
+        cols: 2
+        rows: 2
+        size_hint: None, None
+        height: dp(90)
+        width: dp(250)
+        spacing: dp(24)
+        pos_hint: {"center_x": 0.5, "center_y": 0.2}
+        row_force_default: True
+        row_default_height: dp(24)
+
+        canvas.before:
+            Color:
+                rgba: 0.459, 0.459, 0.459, 0.271
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [12]
+
+        Label:
+            text: "Vertikal"            
+
+        Label:
+            text: "Horizontal"
+
+        Label:
+            text: "40°"
+            font_size: '40sp'
+
+        Label:
+            text: "0°"
+            font_size: '40sp'
+
+    GridLayout:
+        cols: 1 
+        size_hint: None, None
+        height: dp(30)*4 + dp(32)*3  # Höhe: 3 Zeilen + spacing
+        spacing: dp(48)
+        pos_hint: {"center_x": 0.8, "center_y": 0.5}  # rechts, vertikal mittig
+        row_force_default: True
+        row_default_height: dp(35)
+
+        GridLayout:
+            cols: 3
+            spacing: dp(8)
+
+            canvas.before:
+                Color:
+                    rgba: 0.459, 0.459, 0.459, 0.271
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            OwnIcon:
+                icon: "arrow-up-down"
+                
+
+            TextInput:
+                text: "1,75"
+                theme_text_color: "Custom"
+                text_color: 1, 1, 1, 1
+                valign: "middle"
+                halign: "center"
+                text_size: self.size
+
+            OwnLabel:
+                text: "m"
+
+        GridLayout:
+            cols: 2
+            spacing: dp(8)
+
+            canvas.before:
+                Color:
+                    rgba: 0.459, 0.459, 0.459, 0.271
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            OwnIcon:
+                icon: "arrow-left-right"
+
+            OwnLabel:
+                text: "1,75m"
+
+        GridLayout:
+            cols: 2
+            spacing: dp(8)
+
+            canvas.before:
+                Color:
+                    rgba: 0.459, 0.459, 0.459, 0.271
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            OwnIcon:
+                icon: "arrow-up-down"                
+
+            OwnLabel:
+                text: "1,75m"
+
+        MDFillRoundFlatIconButton:
+            text: "Höhenmessung"
+            icon: "arrow-expand-vertical"
+            md_bg_color: "red"
+
+
+

@@ -1,9 +1,11 @@
 # Simple Camera App - Vollbild mit Auto-Rotation
-from kivy.app import App
+from kivymd.app import MDApp
 from kivy.core.window import Window
 from kivy.uix.boxlayout import BoxLayout
+from kivymd.uix.floatlayout import MDFloatLayout
 from kivy.lang import Builder
 from kivy.utils import platform
+from kivy.properties import StringProperty
 
 from camera4kivy import Preview
 
@@ -23,7 +25,14 @@ if platform == 'android':
             View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
             View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         )
-
+        
+class AppFloatLayout(MDFloatLayout):
+    accelX = StringProperty("accelX")
+    accelY = StringProperty("accelY")
+    accelZ = StringProperty("accelZ")
+    spatialAzimuth = StringProperty("spatialAzimuth")
+    spatialPitch = StringProperty("spatialPitch")
+    spatialRoll = StringProperty("spatialRoll")
 
 class CameraScreen(BoxLayout):
     """Simple camera preview screen"""
@@ -40,18 +49,17 @@ class CameraScreen(BoxLayout):
             self.ids.preview.disconnect_camera()
 
 
-class CameraApp(App):
+class CameraApp(MDApp):
     """Main Camera Application"""
     
     def build(self):
         """Build the application UI"""
-        Window.fullscreen = True
+        # Window.fullscreen = True
         Window.orientation = 'sensor'
-        
-        Builder.load_file('main.kv')
-        
+            
         self.camera_screen = CameraScreen()
-        return self.camera_screen
+        
+        return Builder.load_file('main_layout.kv')
     
     def capture_photo(self):
         self.root.ids.preview.capture_photo(location='shared', subdir='Photos')
