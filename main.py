@@ -1,4 +1,3 @@
-# Simple Camera App - Vollbild mit Auto-Rotation
 from kivy.app import App
 from kivy.core.window import Window
 from kivy.uix.boxlayout import BoxLayout
@@ -17,7 +16,6 @@ if platform == 'android':
     
     @run_on_ui_thread
     def set_fullscreen(instance, width, height):
-        """Set fullscreen mode"""
         mActivity.getWindow().getDecorView().setSystemUiVisibility(
             View.SYSTEM_UI_FLAG_FULLSCREEN | 
             View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
@@ -26,25 +24,18 @@ if platform == 'android':
 
 
 class CameraScreen(BoxLayout):
-    """Simple camera preview screen"""
-    
     def on_enter(self):
-        """Connect camera when screen loads"""
         if hasattr(self, 'ids') and 'preview' in self.ids:
             self.ids.preview.connect_camera()
             self.ids.preview.allow_stretch = True
     
     def on_leave(self):
-        """Disconnect camera when leaving"""
         if hasattr(self, 'ids') and 'preview' in self.ids:
             self.ids.preview.disconnect_camera()
 
 
 class CameraApp(App):
-    """Main Camera Application"""
-    
     def build(self):
-        """Build the application UI"""
         Window.fullscreen = True
         Window.orientation = 'sensor'
         
@@ -58,7 +49,6 @@ class CameraApp(App):
         print("Foto gespeichert!")
     
     def on_start(self):
-        """Called when app starts"""
         if platform == 'android':
             # Vollbild-Modus aktivieren
             Window.bind(on_resize=set_fullscreen)
@@ -73,7 +63,6 @@ class CameraApp(App):
             self.camera_screen.on_leave()
     
     def start_camera(self):
-        """Start the camera"""
         self.dont_gc = None
         if hasattr(self.camera_screen, 'on_enter'):
             self.camera_screen.on_enter()
