@@ -37,7 +37,7 @@
     halign: "center"
 
 <CameraScreen>:
-    orientation: 'horizontal'  # Horizontal statt vertikal!
+    orientation: 'horizontal'
     
     # LINKE SEITE: Kamera (70% der Breite)
     FloatLayout:
@@ -47,10 +47,8 @@
             id: preview
             letterbox_color: 0, 0, 0, 1
         
-        # Fadenkreuz über der Kamera
         Crosshair:
         
-        # Sensor-Daten oben links über der Kamera
         GridLayout:
             rows: 6
             size_hint: None, None
@@ -70,36 +68,36 @@
                     radius: [8]
 
             Label:
-                text: app.root.accelX if app.root else "accelX"
+                text: root.accelX
                 font_size: '16sp'
                 color: 1, 1, 1, 1
 
             Label:
-                text: app.root.accelY if app.root else "accelY"
+                text: root.accelY
                 font_size: '16sp'
                 color: 1, 1, 1, 1
 
             Label:
-                text: app.root.accelZ if app.root else "accelZ"
+                text: root.accelZ
                 font_size: '16sp'
                 color: 1, 1, 1, 1
 
             Label:
-                text: app.root.spatialAzimuth if app.root else "Azimuth"
+                text: root.spatialAzimuth
                 font_size: '16sp'
                 color: 1, 1, 1, 1
 
             Label:
-                text: app.root.spatialPitch if app.root else "Pitch"
+                text: root.spatialPitch
                 font_size: '16sp'
                 color: 1, 1, 1, 1
 
             Label:
-                text: app.root.spatialRoll if app.root else "Roll"
+                text: root.spatialRoll
                 font_size: '16sp'
                 color: 1, 1, 1, 1
     
-    # RECHTE SEITE: Controls (30% der Breite)
+    # RECHTE SEITE
     BoxLayout:
         orientation: 'vertical'
         size_hint_x: 0.3
@@ -113,7 +111,6 @@
                 pos: self.pos
                 size: self.size
         
-        # Höhe Input
         BoxLayout:
             orientation: 'horizontal'
             size_hint_y: None
@@ -146,7 +143,6 @@
                 size_hint_x: 0.2
                 font_size: '20sp'
         
-        # Label 1: Horizontal
         BoxLayout:
             orientation: 'horizontal'
             size_hint_y: None
@@ -170,7 +166,6 @@
                 font_size: '20sp'
                 size_hint_x: 0.7
         
-        # Label 2: Vertikal
         BoxLayout:
             orientation: 'horizontal'
             size_hint_y: None
@@ -223,6 +218,3 @@
                 text: 'Exit'
                 background_color: 0.5, 0.5, 0.5, 1
                 on_press: app.on_stop()
-
-AppFloatLayout:
-    CameraScreen:

@@ -31,10 +31,10 @@ if platform == 'android':
             View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         )
 
-class AppFloatLayout(MDFloatLayout):
-    accelX = StringProperty("accelX: 0.0")
-    accelY = StringProperty("accelY: 0.0")
-    accelZ = StringProperty("accelZ: 0.0")
+class CameraScreen(BoxLayout):
+    accelX = StringProperty("X: 0.0")
+    accelY = StringProperty("Y: 0.0")
+    accelZ = StringProperty("Z: 0.0")
     spatialAzimuth = StringProperty("Azimuth: 0.0°")
     spatialPitch = StringProperty("Pitch: 0.0°")
     spatialRoll = StringProperty("Roll: 0.0°")
@@ -49,7 +49,6 @@ class AppFloatLayout(MDFloatLayout):
 
     def update_sensors(self, dt):
         try:
-            # Beschleunigungssensor
             if hasattr(accelerometer, 'enabled') and accelerometer.enabled:
                 accel = accelerometer.read()
                 if accel:
@@ -57,13 +56,11 @@ class AppFloatLayout(MDFloatLayout):
                     self.accelY = f"Y: {accel[1]:.2f}"
                     self.accelZ = f"Z: {accel[2]:.2f}"
 
-            # Kompass für Azimuth
             if hasattr(compass, 'enabled') and compass.enabled:
                 compass_data = compass.read()
                 if compass_data:
                     self.spatialAzimuth = f"Azimuth: {compass_data[0]:.1f}°"
 
-            # Gyroscope für Pitch/Roll
             try:
                 if hasattr(gyroscope, 'enabled') and gyroscope.enabled:
                     gyro = gyroscope.read()
@@ -76,7 +73,6 @@ class AppFloatLayout(MDFloatLayout):
         except Exception as e:
             print(f"Sensor-Fehler: {e}")
 
-class CameraScreen(BoxLayout):
     def on_enter(self):
         if hasattr(self, 'ids') and 'preview' in self.ids:
             self.ids.preview.connect_camera()
