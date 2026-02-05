@@ -5,9 +5,15 @@ from kivymd.uix.floatlayout import MDFloatLayout
 from kivy.lang import Builder
 from kivy.utils import platform
 from kivy.properties import StringProperty
+from kivy.clock import Clock
 from camera4kivy import Preview
 
-Window.set_icon("icons/appIcon.png")
+try:
+    from plyer import accelerometer, compass, gyroscope
+    SENSORS_AVAILABLE = True
+except ImportError:
+    SENSORS_AVAILABLE = False
+    print("Plyer nicht verfügbar - Sensoren deaktiviert")
 
 if platform == 'android':
     from android_permissions import AndroidPermissions
@@ -26,12 +32,49 @@ if platform == 'android':
         )
 
 class AppFloatLayout(MDFloatLayout):
-    accelX = StringProperty("accelX")
-    accelY = StringProperty("accelY")
-    accelZ = StringProperty("accelZ")
-    spatialAzimuth = StringProperty("spatialAzimuth")
-    spatialPitch = StringProperty("spatialPitch")
-    spatialRoll = StringProperty("spatialRoll")
+    accelX = StringProperty("accelX: 0.0")
+    accelY = StringProperty("accelY: 0.0")
+    accelZ = StringProperty("accelZ: 0.0")
+    spatialAzimuth = StringProperty("Azimuth: 0.0°")
+    spatialPitch = StringProperty("Pitch: 0.0°")
+    spatialRoll = StringProperty("Roll: 0.0°")
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        if SENSORS_AVAILABLE:
+            self.start_sensor_updates()
+
+    def start_sensor_updates(self):
+        Clock.schedule_interval(self.update_sensors, 0.1)
+
+    def update_sensors(self, dt):
+        try:
+            # Beschleunigungssensor
+            if hasattr(accelerometer, 'enabled') and accelerometer.enabled:
+                accel = accelerometer.read()
+                if accel:
+                    self.accelX = f"X: {accel[0]:.2f}"
+                    self.accelY = f"Y: {accel[1]:.2f}"
+                    self.accelZ = f"Z: {accel[2]:.2f}"
+
+            # Kompass für Azimuth
+            if hasattr(compass, 'enabled') and compass.enabled:
+                compass_data = compass.read()
+                if compass_data:
+                    self.spatialAzimuth = f"Azimuth: {compass_data[0]:.1f}°"
+
+            # Gyroscope für Pitch/Roll
+            try:
+                if hasattr(gyroscope, 'enabled') and gyroscope.enabled:
+                    gyro = gyroscope.read()
+                    if gyro:
+                        self.spatialPitch = f"Pitch: {gyro[1]:.1f}°"
+                        self.spatialRoll = f"Roll: {gyro[2]:.1f}°"
+            except:
+                pass
+
+        except Exception as e:
+            print(f"Sensor-Fehler: {e}")
 
 class CameraScreen(BoxLayout):
     def on_enter(self):
