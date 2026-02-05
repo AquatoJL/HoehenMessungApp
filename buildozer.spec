@@ -1,20 +1,20 @@
 [app]
-title = Messung
+title = HöhenMessung
 package.name = measure
 package.domain = org.example
 
 source.dir = .
 source.include_exts = py,png,jpg,kv,atlas,json
-icon.filename = %(source.dir)s/icons/camera_red.png
+icon.filename = %(source.dir)s/icons/appIcon.png
 
-version = 0.1
+version = 0.2
 
-requirements = python3,kivy,camera4kivy,gestures4kivy
+requirements = python3,kivy,kivymd,camera4kivy,gestures4kivy,plyer
 
-orientation = portrait, landscape, portrait-reverse, landscape-reverse
+orientation = landscape
 fullscreen = 0
-android.permissions = CAMERA, RECORD_AUDIO
 
+android.permissions = CAMERA,WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE
 android.api = 33
 android.minapi = 21
 android.ndk = 25b
