@@ -9,7 +9,7 @@ icon.filename = %(source.dir)s/icons/appIcon.png
 
 version = 0.2
 
-requirements = python3,kivy,kivymd,camera4kivy,gestures4kivy,plyer
+requirements = python3,kivy,kivymd,camera4kivy,gestures4kivy,plyer,android
 
 orientation = landscape
 fullscreen = 0

@@ -50,7 +50,7 @@ class CameraScreen(BoxLayout):
     def update_sensors(self, dt):
         try:
             if hasattr(accelerometer, 'enabled') and accelerometer.enabled:
-                accel = accelerometer.read()
+                accel = accelerometer.acceleration[:3]
                 if accel:
                     self.accelX = f"X: {accel[0]:.2f}"
                     self.accelY = f"Y: {accel[1]:.2f}"
