@@ -7,6 +7,8 @@ from kivy.utils import platform
 from kivy.properties import StringProperty
 from camera4kivy import Preview
 
+Window.set_icon("icons/appIcon.png")
+
 if platform == 'android':
     from android_permissions import AndroidPermissions
     from jnius import autoclass
