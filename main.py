@@ -20,6 +20,9 @@ if platform == 'android':
     from jnius import autoclass
     from android.runnable import run_on_ui_thread
     from android import mActivity
+    from android.permissions import request_permissions, Permission
+
+    request_permissions([Permission.CAMERA, Permission.RECORD_AUDIO, Permission.READ_EXTERNAL_STORAGE])
 
     View = autoclass('android.view.View')
 
