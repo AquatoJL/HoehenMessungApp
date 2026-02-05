@@ -1,35 +1,228 @@
-<CameraScreen>:
-    orientation: 'vertical'
-    
-    canvas.before:
-        Color:
-            rgba: 0, 0, 0, 1
-        Rectangle:
-            pos: self.pos
-            size: self.size
-    
-    Preview:
-        id: preview
-        letterbox_color: 0, 0, 0, 1
-        size_hint: 1, 1
+<Crosshair@MDWidget>:
+    disabled: True
+    size_hint: None, None
+    size: dp(60), dp(60)
+    pos_hint: {"center_x": 0.5, "center_y": 0.5}
 
+    canvas:
+        Color:
+            rgba: 1,1,1,1
+        Line:
+            width: 2
+            points: root.center_x - root.width / 2, root.center_y, root.center_x + root.width / 2, root.center_y
+        Line:
+            width: 2
+            points: root.center_x, root.center_y - root.height / 2, root.center_x, root.center_y + root.height / 2
+
+        Color:
+            rgba: 0,0,0,1
+        Line:
+            width: 1
+            points: root.center_x - root.width / 2, root.center_y, root.center_x + root.width / 2, root.center_y
+        Line:
+            width: 1
+            points: root.center_x, root.center_y - root.height / 2, root.center_x, root.center_y + root.height / 2
+
+<OwnIcon@MDIcon>:
+    theme_icon_color: "Custom"
+    icon_color: 1, 1, 1, 1    
+    font_size: '35sp'
+    valign: "middle"
+    halign: "center"
+
+<OwnLabel@MDLabel>:
+    theme_text_color: "Custom"
+    text_color: 1, 1, 1, 1
+    valign: "middle"
+    halign: "center"
+
+<CameraScreen>:
+    orientation: 'horizontal'  # Horizontal statt vertikal!
+    
+    # LINKE SEITE: Kamera (70% der Breite)
+    FloatLayout:
+        size_hint_x: 0.7
+        
+        Preview:
+            id: preview
+            letterbox_color: 0, 0, 0, 1
+        
+        # Fadenkreuz über der Kamera
+        Crosshair:
+        
+        # Sensor-Daten oben links über der Kamera
+        GridLayout:
+            rows: 6
+            size_hint: None, None
+            height: dp(150)
+            width: dp(200)
+            spacing: dp(4)
+            pos_hint: {"x": 0.02, "top": 0.98}
+            row_force_default: True
+            row_default_height: dp(24)
+
+            canvas.before:
+                Color:
+                    rgba: 0, 0, 0, 0.6
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [8]
+
+            Label:
+                text: app.root.accelX if app.root else "accelX"
+                font_size: '16sp'
+                color: 1, 1, 1, 1
+
+            Label:
+                text: app.root.accelY if app.root else "accelY"
+                font_size: '16sp'
+                color: 1, 1, 1, 1
+
+            Label:
+                text: app.root.accelZ if app.root else "accelZ"
+                font_size: '16sp'
+                color: 1, 1, 1, 1
+
+            Label:
+                text: app.root.spatialAzimuth if app.root else "Azimuth"
+                font_size: '16sp'
+                color: 1, 1, 1, 1
+
+            Label:
+                text: app.root.spatialPitch if app.root else "Pitch"
+                font_size: '16sp'
+                color: 1, 1, 1, 1
+
+            Label:
+                text: app.root.spatialRoll if app.root else "Roll"
+                font_size: '16sp'
+                color: 1, 1, 1, 1
+    
+    # RECHTE SEITE: Controls (30% der Breite)
     BoxLayout:
-        orientation: 'horizontal'
-        size_hint_y: 0.15
-        spacing: 10
-        padding: 10
+        orientation: 'vertical'
+        size_hint_x: 0.3
+        padding: dp(10)
+        spacing: dp(10)
         
-        Button:
-            text: 'Foto'
-            background_color: 0, 1, 0, 1
-            on_press: app.capture_photo()
+        canvas.before:
+            Color:
+                rgba: 0.2, 0.2, 0.2, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
         
-        Button:
-            text: 'Foto'
-            background_color: 0, 0.7, 1, 1
-            on_press: app.capture_photo()
+        # Höhe Input
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: dp(50)
+            spacing: dp(8)
+            
+            canvas.before:
+                Color:
+                    rgba: 0.3, 0.3, 0.3, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [8]
+            
+            OwnIcon:
+                icon: "arrow-up-down"
+                size_hint_x: 0.25
+            
+            TextInput:
+                text: "1,75"
+                foreground_color: 1, 1, 1, 1
+                background_color: 0.4, 0.4, 0.4, 1
+                font_size: '20sp'
+                multiline: False
+                size_hint_x: 0.55
+                padding: [10, 10]
+            
+            OwnLabel:
+                text: "m"
+                size_hint_x: 0.2
+                font_size: '20sp'
         
+        # Label 1: Horizontal
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: dp(50)
+            spacing: dp(8)
+            
+            canvas.before:
+                Color:
+                    rgba: 0.3, 0.3, 0.3, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [8]
+            
+            OwnIcon:
+                icon: "arrow-left-right"
+                size_hint_x: 0.3
+            
+            OwnLabel:
+                text: "1,75m"
+                font_size: '20sp'
+                size_hint_x: 0.7
+        
+        # Label 2: Vertikal
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: dp(50)
+            spacing: dp(8)
+            
+            canvas.before:
+                Color:
+                    rgba: 0.3, 0.3, 0.3, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [8]
+            
+            OwnIcon:
+                icon: "arrow-up-down"
+                size_hint_x: 0.3
+            
+            OwnLabel:
+                text: "1,75m"
+                font_size: '20sp'
+                size_hint_x: 0.7
+        
+        # Spacer (nimmt verfügbaren Platz ein)
+        Widget:
+        
+        # Button unten
         Button:
-            text: 'Exit'
+            text: "Höhenmessung"
+            size_hint_y: None
+            height: dp(60)
             background_color: 1, 0, 0, 1
+            font_size: '18sp'
+            bold: True
             on_press: app.capture_photo()
+        
+        # Foto & Exit Buttons
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: dp(50)
+            spacing: dp(5)
+            
+            Button:
+                text: 'Foto'
+                background_color: 0, 1, 0, 1
+                on_press: app.capture_photo()
+            
+            Button:
+                text: 'Exit'
+                background_color: 0.5, 0.5, 0.5, 1
+                on_press: app.on_stop()
+
+AppFloatLayout:
+    CameraScreen:
