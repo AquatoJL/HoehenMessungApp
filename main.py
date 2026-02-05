@@ -16,7 +16,7 @@ except ImportError:
     print("Plyer nicht verfügbar - Sensoren deaktiviert")
 
 if platform == 'android':
-    from android_permissions import AndroidPermissions
+    #from android_permissions import AndroidPermissions
     from jnius import autoclass
     from android.runnable import run_on_ui_thread
     from android import mActivity
@@ -100,7 +100,7 @@ class CameraApp(MDApp):
         if platform == 'android':
             Window.bind(on_resize=set_fullscreen)
             set_fullscreen(None, Window.width, Window.height)
-            self.dont_gc = AndroidPermissions(self.start_camera)
+            #self.dont_gc = AndroidPermissions(self.start_camera)
         else:
             self.start_camera()
 
@@ -109,7 +109,7 @@ class CameraApp(MDApp):
             self.camera_screen.on_leave()
 
     def start_camera(self):
-        self.dont_gc = None
+        #self.dont_gc = None
         if hasattr(self.camera_screen, 'on_enter'):
             self.camera_screen.on_enter()
 
