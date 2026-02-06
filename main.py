@@ -16,16 +16,10 @@ except ImportError:
     print("Plyer nicht verfügbar - Sensoren deaktiviert")
 
 if platform == 'android':
-    #from android_permissions import AndroidPermissions
+    from android_permissions import AndroidPermissions
     from jnius import autoclass
     from android.runnable import run_on_ui_thread
     from android import mActivity
-    from android.permissions import request_permissions, Permission, check_permission
-
-    request_permissions([Permission.CAMERA, 
-                         Permission.READ_EXTERNAL_STORAGE, 
-                         Permission.WRITE_EXTERNAL_STORAGE
-                        ])
 
     View = autoclass('android.view.View')
 
@@ -51,32 +45,25 @@ class CameraScreen(BoxLayout):
             self.start_sensor_updates()
 
     def start_sensor_updates(self):
+        accelerometer.enable()
         Clock.schedule_interval(self.update_sensors, 0.1)
 
     def update_sensors(self, dt):
-        import random
-        self.accelX = f"X: {random.random():.2f}"
         try:
-            if hasattr(accelerometer, 'enabled') and accelerometer.enabled:
-                accel = accelerometer.acceleration[:3]
-                if accel:
-                    self.accelX = f"X: {accel[0]:.2f}"
-                    self.accelY = f"Y: {accel[1]:.2f}"
-                    self.accelZ = f"Z: {accel[2]:.2f}"
+            accel = accelerometer.acceleration[:3]
+            if not accel == (None, None, None):
+                self.accelX = f"X: {accel[0]:.2f}"
+                self.accelY = f"Y: {accel[1]:.2f}"
+                self.accelZ = f"Z: {accel[2]:.2f}"
 
-            if hasattr(compass, 'enabled') and compass.enabled:
-                compass_data = compass.read()
-                if compass_data:
-                    self.spatialAzimuth = f"Azimuth: {compass_data[0]:.1f}°"
+            compass_data = compass.read()
+            if compass_data:
+                self.spatialAzimuth = f"Azimuth: {compass_data[0]:.1f}°"
 
-            try:
-                if hasattr(gyroscope, 'enabled') and gyroscope.enabled:
-                    gyro = gyroscope.read()
-                    if gyro:
-                        self.spatialPitch = f"Pitch: {gyro[1]:.1f}°"
-                        self.spatialRoll = f"Roll: {gyro[2]:.1f}°"
-            except:
-                pass
+            gyro = gyroscope.read()
+            if gyro:
+                self.spatialPitch = f"Pitch: {gyro[1]:.1f}°"
+                self.spatialRoll = f"Roll: {gyro[2]:.1f}°"
 
         except Exception as e:
             print(f"Sensor-Fehler: {e}")
@@ -105,7 +92,7 @@ class CameraApp(MDApp):
         if platform == 'android':
             Window.bind(on_resize=set_fullscreen)
             set_fullscreen(None, Window.width, Window.height)
-            #self.dont_gc = AndroidPermissions(self.start_camera)
+            self.dont_gc = AndroidPermissions(self.start_camera)
         else:
             self.start_camera()
 
@@ -114,7 +101,7 @@ class CameraApp(MDApp):
             self.camera_screen.on_leave()
 
     def start_camera(self):
-        #self.dont_gc = None
+        self.dont_gc = None
         if hasattr(self.camera_screen, 'on_enter'):
             self.camera_screen.on_enter()
 
