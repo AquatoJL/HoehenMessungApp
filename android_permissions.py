@@ -43,7 +43,7 @@ class AndroidPermissions:
             #################################################
             # Customize run time permissions for the app here
             #################################################
-            self.permissions = [Permission.CAMERA, Permission.RECORD_AUDIO, Permission.READ_EXTERNAL_STORAGE]
+            self.permissions = [Permission.CAMERA, Permission.RECORD_AUDIO]
             if api_version < 29:
                 self.permissions.append(Permission.WRITE_EXTERNAL_STORAGE)
                 #################################################
@@ -59,7 +59,7 @@ class AndroidPermissions:
             if self.start_app:
                 self.start_app()
         elif self.permission_dialog_count < 2:
-            Clock.schedule_once(self.permission_dialog)
+            Clock.schedule_once(self.permission_dialog)  
         else:
             self.no_permission_view()
         
