@@ -49,7 +49,7 @@ class CameraScreen(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         if SENSORS_AVAILABLE:
-            pass#self.start_sensor_updates()
+            self.start_sensor_updates()
 
     def start_sensor_updates(self):
         accelerometer.enable()
