@@ -4,9 +4,10 @@ from kivy.uix.boxlayout import BoxLayout
 from kivymd.uix.floatlayout import MDFloatLayout
 from kivy.lang import Builder
 from kivy.utils import platform
-from kivy.properties import StringProperty
+from kivy.properties import StringProperty, NumericProperty
 from kivy.clock import Clock
 from camera4kivy import Preview
+import math
 
 try:
     from plyer import accelerometer, compass, gyroscope
@@ -35,14 +36,20 @@ class CameraScreen(BoxLayout):
     accelX = StringProperty("X: 0.0")
     accelY = StringProperty("Y: 0.0")
     accelZ = StringProperty("Z: 0.0")
-    spatialAzimuth = StringProperty("Azimuth: 0.0°")
-    spatialPitch = StringProperty("Pitch: 0.0°")
-    spatialRoll = StringProperty("Roll: 0.0°")
+
+    pitch_angle = NumericProperty(0.0)
+    roll_angle = NumericProperty(0.0)
+
+    button_text = StringProperty("Entfernung messen")
+    phone_height = NumericProperty(1.5)
+    object_height = StringProperty("-- m")
+    distance = StringProperty("-- m")
+
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         if SENSORS_AVAILABLE:
-            self.start_sensor_updates()
+            pass#self.start_sensor_updates()
 
     def start_sensor_updates(self):
         accelerometer.enable()
@@ -52,21 +59,17 @@ class CameraScreen(BoxLayout):
         try:
             accel = accelerometer.acceleration[:3]
             if not accel == (None, None, None):
+                ax, ay, az = accel
+                
+                # Pitch & Roll aus Accelerometer berechnen (in Grad)
+                self.pitch_angle = math.degrees(math.atan2(ax, math.sqrt(ay*ay + az*az)))
+                self.roll_angle = math.degrees(math.atan2(ay, math.sqrt(ax*ax + az*az)))
+
                 self.accelX = f"X: {accel[0]:.2f}"
                 self.accelY = f"Y: {accel[1]:.2f}"
                 self.accelZ = f"Z: {accel[2]:.2f}"
-
-            compass_data = compass.read()
-            if compass_data:
-                self.spatialAzimuth = f"Azimuth: {compass_data[0]:.1f}°"
-
-            gyro = gyroscope.read()
-            if gyro:
-                self.spatialPitch = f"Pitch: {gyro[1]:.1f}°"
-                self.spatialRoll = f"Roll: {gyro[2]:.1f}°"
-
-        except Exception as e:
-            print(f"Sensor-Fehler: {e}")
+        except:
+            pass
 
     def on_enter(self):
         if hasattr(self, 'ids') and 'preview' in self.ids:
@@ -84,9 +87,37 @@ class CameraApp(MDApp):
         self.camera_screen = CameraScreen()
         return self.camera_screen
 
-    def capture_photo(self):
-        self.root.ids.preview.capture_photo(location='shared', subdir='Photos')
-        print("Foto gespeichert!")
+    def measure(self):
+        if self.camera_screen.button_text == "Entfernung messen":
+            self.camera_screen.button_text = "Höhe messen"
+            self.camera_screen.distance = self.calculate_distance()
+        elif self.camera_screen.button_text == "Höhe messen":
+            self.camera_screen.button_text = "Zurücksetzen"
+            #self.calculate_object_height()
+        else:
+            self.camera_screen.button_text = "Entfernung messen"
+            self.camera_screen.object_height = "-- m"
+            self.camera_screen.distance = "-- m"
+
+    def calculate_distance(self):
+        if self.pitch_angle != 0:
+            try:
+                distance = self.phone_height * math.tan(math.radians(self.pitch_angle))
+                return distance
+            except ZeroDivisionError:
+                return -1
+        else:
+            return -1
+
+    def calculate_object_height(self):
+        if self.pitch_angle != 0:
+            try:
+                object_height = self.phone_height + (self.distance * math.tan(math.radians(self.pitch_angle)))
+                self.object_height = f"{object_height:.2f} m"
+            except ZeroDivisionError:
+                self.object_height = "-- m"
+        else:
+            self.object_height = "-- m"
 
     def on_start(self):
         if platform == 'android':

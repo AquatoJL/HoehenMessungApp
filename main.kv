@@ -30,12 +30,6 @@
     valign: "middle"
     halign: "center"
 
-<OwnLabel@MDLabel>:
-    theme_text_color: "Custom"
-    text_color: 1, 1, 1, 1
-    valign: "middle"
-    halign: "center"
-
 <CameraScreen>:
     orientation: 'horizontal'
     
@@ -81,21 +75,6 @@
                 text: root.accelZ
                 font_size: '16sp'
                 color: 1, 1, 1, 1
-
-            Label:
-                text: root.spatialAzimuth
-                font_size: '16sp'
-                color: 1, 1, 1, 1
-
-            Label:
-                text: root.spatialPitch
-                font_size: '16sp'
-                color: 1, 1, 1, 1
-
-            Label:
-                text: root.spatialRoll
-                font_size: '16sp'
-                color: 1, 1, 1, 1
     
     # RECHTE SEITE
     BoxLayout:
@@ -111,6 +90,28 @@
                 pos: self.pos
                 size: self.size
         
+        Widget:
+            size_hint_y: 0.15
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: dp(50)
+            spacing: dp(8)
+            
+            canvas.before:
+                Color:
+                    rgba: 0.3, 0.3, 0.3, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [8]
+            
+            Label:
+                text: "Telefonhöhe"
+                font_size: '20sp'
+                color: 1, 1, 1, 1
+
         BoxLayout:
             orientation: 'horizontal'
             size_hint_y: None
@@ -130,19 +131,40 @@
                 size_hint_x: 0.25
             
             TextInput:
-                text: "1,75"
-                foreground_color: 1, 1, 1, 1
-                background_color: 0.4, 0.4, 0.4, 1
+                id: phone_height_input
+                text: "1.50"
+                input_filter: 'float'
                 font_size: '20sp'
                 multiline: False
-                size_hint_x: 0.55
-                padding: [10, 10]
+                on_text_validate: root.phone_height = float(self.text)
+                foreground_color: 1, 1, 1, 1
+                background_color: 0.4, 0.4, 0.4, 1
             
-            OwnLabel:
+            Label:
                 text: "m"
                 size_hint_x: 0.2
                 font_size: '20sp'
+                color: 1, 1, 1, 1
         
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: dp(50)
+            spacing: dp(8)
+            
+            canvas.before:
+                Color:
+                    rgba: 0.3, 0.3, 0.3, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [8]
+            
+            Label:
+                text: "Entfernung"
+                font_size: '20sp'
+                color: 1, 1, 1, 1
+
         BoxLayout:
             orientation: 'horizontal'
             size_hint_y: None
@@ -161,10 +183,30 @@
                 icon: "arrow-left-right"
                 size_hint_x: 0.3
             
-            OwnLabel:
-                text: "1,75m"
+            Label:
+                text: root.distance
                 font_size: '20sp'
                 size_hint_x: 0.7
+                color: 1, 1, 1, 1
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: dp(50)
+            spacing: dp(8)
+            
+            canvas.before:
+                Color:
+                    rgba: 0.3, 0.3, 0.3, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [8]
+            
+            Label:
+                text: "Höhe"
+                font_size: '20sp'
+                color: 1, 1, 1, 1
         
         BoxLayout:
             orientation: 'horizontal'
@@ -184,37 +226,21 @@
                 icon: "arrow-up-down"
                 size_hint_x: 0.3
             
-            OwnLabel:
-                text: "1,75m"
+            Label:
+                text: root.object_height
                 font_size: '20sp'
                 size_hint_x: 0.7
-        
-        # Spacer (nimmt verfügbaren Platz ein)
-        Widget:
+                color: 1, 1, 1, 1
         
         # Button unten
         Button:
-            text: "Höhenmessung"
+            text: root.button_text
             size_hint_y: None
             height: dp(60)
             background_color: 1, 0, 0, 1
             font_size: '18sp'
             bold: True
-            on_press: app.capture_photo()
-        
-        # Foto & Exit Buttons
-        BoxLayout:
-            orientation: 'horizontal'
-            size_hint_y: None
-            height: dp(50)
-            spacing: dp(5)
-            
-            Button:
-                text: 'Foto'
-                background_color: 0, 1, 0, 1
-                on_press: app.capture_photo()
-            
-            Button:
-                text: 'Exit'
-                background_color: 0.5, 0.5, 0.5, 1
-                on_press: app.on_stop()
+            on_press: app.measure()
+
+        Widget:
+            size_hint_y: 0.15
