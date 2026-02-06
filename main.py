@@ -20,9 +20,12 @@ if platform == 'android':
     from jnius import autoclass
     from android.runnable import run_on_ui_thread
     from android import mActivity
-    from android.permissions import request_permissions, Permission
+    from android.permissions import request_permissions, Permission, check_permission
 
-    request_permissions([Permission.CAMERA, Permission.RECORD_AUDIO, Permission.READ_EXTERNAL_STORAGE])
+    request_permissions([Permission.CAMERA, 
+                         Permission.READ_EXTERNAL_STORAGE, 
+                         Permission.WRITE_EXTERNAL_STORAGE
+                        ])
 
     View = autoclass('android.view.View')
 
@@ -51,6 +54,8 @@ class CameraScreen(BoxLayout):
         Clock.schedule_interval(self.update_sensors, 0.1)
 
     def update_sensors(self, dt):
+        import random
+        self.accelX = f"X: {random.random():.2f}"
         try:
             if hasattr(accelerometer, 'enabled') and accelerometer.enabled:
                 accel = accelerometer.acceleration[:3]
