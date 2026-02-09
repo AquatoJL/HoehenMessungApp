@@ -25,20 +25,38 @@
 
 <OwnIcon@MDIcon>:
     theme_icon_color: "Custom"
-    icon_color: 1, 1, 1, 1    
-    font_size: '35sp'
+    color: 1, 1, 1, 1
     valign: "middle"
     halign: "center"
+    text_size: self.size
 
-<MeasureLabel@Label>
+<OwnLabel@MDLabel>
+    theme_text_color: "Custom"
+    text_color: 1, 1, 1, 1
+    halign: "center"
+    valign: "middle"
+    text_size: self.size
+
+<MeasureLabel@MDLabel>
     font_size: '40sp'
+    theme_text_color: "Custom"
+    text_color: 1, 1, 1, 1
+    halign: "center"
+    valign: "middle"
+
+<OwnBox@MDBoxLayout>
+    orientation: 'horizontal'
+    size_hint_y: None
+    height: dp(30)
+    spacing: dp(8)
+    valign: "middle"
+    halign: "center"
 
 <CameraScreen>:
     orientation: 'horizontal'
     
-    # LINKE SEITE: Kamera (70% der Breite)
     FloatLayout:
-        size_hint_x: 0.7
+        size_hint_x: 0.75
         
         Preview:
             id: preview
@@ -65,10 +83,10 @@
                     size: self.size
                     radius: [12]
 
-            Label:
+            OwnLabel:
                 text: "Pitch"            
 
-            Label:
+            OwnLabel:
                 text: "Roll"
 
             MeasureLabel:
@@ -76,48 +94,12 @@
 
             MeasureLabel:
                 text: str(round(root.roll_angle, 1))
-
-
-        GridLayout:
-            rows: 6
-            size_hint: None, None
-            height: dp(150)
-            width: dp(200)
-            spacing: dp(4)
-            pos_hint: {"x": 0.02, "top": 0.98}
-            row_force_default: True
-            row_default_height: dp(24)
-
-            canvas.before:
-                Color:
-                    rgba: 0, 0, 0, 0.6
-                RoundedRectangle:
-                    pos: self.pos
-                    size: self.size
-                    radius: [8]
-
-            Label:
-                text: root.accelX
-                font_size: '16sp'
-                color: 1, 1, 1, 1
-
-            Label:
-                text: root.accelY
-                font_size: '16sp'
-                color: 1, 1, 1, 1
-
-            Label:
-                text: root.accelZ
-                font_size: '16sp'
-                color: 1, 1, 1, 1
     
-    # RECHTE SEITE
     BoxLayout:
         orientation: 'vertical'
-        size_hint_x: 0.3
+        size_hint_x: 0.25
         padding: dp(10)
         spacing: dp(10)
-        pos_hint: {"center_x": 0.8, "center_y": 0.5}
         
         canvas.before:
             Color:
@@ -125,35 +107,22 @@
             Rectangle:
                 pos: self.pos
                 size: self.size
-        
-        Widget:
-            size_hint_y: 0.15
 
-        BoxLayout:
-            orientation: 'horizontal'
-            size_hint_y: None
-            height: dp(50)
-            spacing: dp(8)
-            
+        Widget:
+
+        OwnBox:            
             canvas.before:
                 Color:
-                    rgba: 0.3, 0.3, 0.3, 1
+                    rgba: 0.4, 0.4, 0.4, 1
                 RoundedRectangle:
                     pos: self.pos
                     size: self.size
                     radius: [8]
             
-            Label:
+            OwnLabel:
                 text: "Telefonhöhe"
-                font_size: '20sp'
-                color: 1, 1, 1, 1
 
-        BoxLayout:
-            orientation: 'horizontal'
-            size_hint_y: None
-            height: dp(50)
-            spacing: dp(8)
-            
+        OwnBox:            
             canvas.before:
                 Color:
                     rgba: 0.3, 0.3, 0.3, 1
@@ -164,49 +133,36 @@
             
             OwnIcon:
                 icon: "arrow-up-down"
-                size_hint_x: 0.25
             
             TextInput:
                 id: phone_height_input
                 text: "1.50"
                 input_filter: 'float'
-                font_size: '20sp'
+                font_size: '15sp'
                 multiline: False
                 on_text_validate: root.phone_height = float(self.text)
                 foreground_color: 1, 1, 1, 1
                 background_color: 0.4, 0.4, 0.4, 1
+                halign: "center"
+                valign: "middle"
+                text_size: self.size
             
-            Label:
+            OwnLabel:
                 text: "m"
-                size_hint_x: 0.2
-                font_size: '20sp'
-                color: 1, 1, 1, 1
         
-        BoxLayout:
-            orientation: 'horizontal'
-            size_hint_y: None
-            height: dp(50)
-            spacing: dp(8)
-            
+        OwnBox:            
             canvas.before:
                 Color:
-                    rgba: 0.3, 0.3, 0.3, 1
+                    rgba: 0.4, 0.4, 0.4, 1
                 RoundedRectangle:
                     pos: self.pos
                     size: self.size
                     radius: [8]
             
-            Label:
+            OwnLabel:
                 text: "Entfernung"
-                font_size: '20sp'
-                color: 1, 1, 1, 1
 
-        BoxLayout:
-            orientation: 'horizontal'
-            size_hint_y: None
-            height: dp(50)
-            spacing: dp(8)
-            
+        OwnBox:            
             canvas.before:
                 Color:
                     rgba: 0.3, 0.3, 0.3, 1
@@ -217,39 +173,24 @@
             
             OwnIcon:
                 icon: "arrow-left-right"
-                size_hint_x: 0.3
+                size_hint_x: 0.5
             
-            Label:
+            OwnLabel:
                 text: root.distance
-                font_size: '20sp'
-                size_hint_x: 0.7
-                color: 1, 1, 1, 1
 
-        BoxLayout:
-            orientation: 'horizontal'
-            size_hint_y: None
-            height: dp(50)
-            spacing: dp(8)
-            
+        OwnBox:                
             canvas.before:
                 Color:
-                    rgba: 0.3, 0.3, 0.3, 1
+                    rgba: 0.4, 0.4, 0.4, 1
                 RoundedRectangle:
                     pos: self.pos
                     size: self.size
                     radius: [8]
             
-            Label:
+            OwnLabel:
                 text: "Höhe"
-                font_size: '20sp'
-                color: 1, 1, 1, 1
         
-        BoxLayout:
-            orientation: 'horizontal'
-            size_hint_y: None
-            height: dp(50)
-            spacing: dp(8)
-            
+        OwnBox:            
             canvas.before:
                 Color:
                     rgba: 0.3, 0.3, 0.3, 1
@@ -262,21 +203,17 @@
                 icon: "arrow-up-down"
                 size_hint_x: 0.3
             
-            Label:
+            OwnLabel:
                 text: root.object_height
-                font_size: '20sp'
-                size_hint_x: 0.7
-                color: 1, 1, 1, 1
-        
-        # Button unten
-        Button:
+
+        MDFillRoundFlatIconButton:
             text: root.button_text
+            icon: root.icon
             size_hint_y: None
-            height: dp(60)
-            background_color: 1, 0, 0, 1
-            font_size: '18sp'
-            bold: True
+            size_hint_x: 1
+            font_size: '16sp'
+            padding: dp(10), dp(5)
+            md_bg_color: 0.7, 0, 0, 1
             on_press: app.measure()
 
         Widget:
-            size_hint_y: 0.15

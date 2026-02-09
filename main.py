@@ -45,6 +45,8 @@ class CameraScreen(BoxLayout):
     object_height = StringProperty("-- m")
     distance = StringProperty("-- m")
 
+    icon = StringProperty("arrow-expand-horizontal")
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         if SENSORS_AVAILABLE:
@@ -90,13 +92,16 @@ class CameraApp(MDApp):
         if self.camera_screen.button_text == "Entfernung messen":
             self.camera_screen.button_text = "Höhe messen"
             self.camera_screen.distance = self.calculate_distance()
+            self.camera_screen.icon = "arrow-expand-vertical"
         elif self.camera_screen.button_text == "Höhe messen":
             self.camera_screen.button_text = "Zurücksetzen"
             self.camera_screen.object_height = self.calculate_object_height()
+            self.camera_screen.icon = "refresh"
         else:
             self.camera_screen.button_text = "Entfernung messen"
             self.camera_screen.object_height = "-- m"
             self.camera_screen.distance = "-- m"
+            self.camera_screen.icon = "arrow-expand-horizontal"
 
     def calculate_distance(self):
         if self.camera_screen.pitch_angle != 0:
