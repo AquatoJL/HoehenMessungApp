@@ -80,12 +80,6 @@ class CameraScreen(BoxLayout):
             self.ids.preview.disconnect_camera()
 
 class CameraApp(MDApp):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-        self._pitch_angle = 0
-
-
     def build(self):
         Window.orientation = 'landscape'
         Builder.load_file('main.kv')
@@ -108,7 +102,6 @@ class CameraApp(MDApp):
         if self.camera_screen.pitch_angle != 0:
             try:
                 distance = self.camera_screen.phone_height * math.tan(math.radians(self.camera_screen.pitch_angle))
-                self._pitch_angle = self.camera_screen.pitch_angle
                 return f"{distance:.2f} m"
             except ZeroDivisionError:
                 return -1
@@ -118,7 +111,7 @@ class CameraApp(MDApp):
     def calculate_object_height(self):
         if self.camera_screen.pitch_angle != 0:
             try:
-                object_height = self.camera_screen.phone_height + (float(self.camera_screen.distance.replace('m','').strip()) * math.tan(math.radians(self._pitch_angle - self.camera_screen.pitch_angle)))
+                object_height = self.camera_screen.phone_height + (float(self.camera_screen.distance.replace('m','').strip()) * math.tan(math.radians(self.camera_screen.pitch_angle-90)))
                 return f"{abs(object_height):.2f} m"
             except ZeroDivisionError:
                 return -1
