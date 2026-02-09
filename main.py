@@ -51,6 +51,7 @@ class CameraScreen(BoxLayout):
         super().__init__(**kwargs)
         if SENSORS_AVAILABLE:
             self.start_sensor_updates()
+        self.pitch_offset = 0.0
 
     def start_sensor_updates(self):
         accelerometer.enable()
@@ -63,7 +64,7 @@ class CameraScreen(BoxLayout):
                 ax, ay, az = accel
                 
                 # Pitch & Roll aus Accelerometer berechnen (in Grad)
-                self.pitch_angle = math.degrees(math.atan2(ax, math.sqrt(ay*ay + az*az)))
+                self.pitch_angle = self.calculate_pitch(ax, ay, az)
                 self.roll_angle = math.degrees(math.atan2(ay, math.sqrt(ax*ax + az*az)))
 
                 self.accelX = f"X: {accel[0]:.2f}"
@@ -71,6 +72,22 @@ class CameraScreen(BoxLayout):
                 self.accelZ = f"Z: {accel[2]:.2f}"
         except:
             pass
+
+    def calculate_pitch(self, ax, ay, az):
+        norm = math.sqrt(ax*ax + ay*ay + az*az)
+        if norm == 0: return self.pitch_angle
+        ax, ay, az = ax/norm, ay/norm, az/norm
+        
+        pitch_new = math.degrees(math.atan2(ax, math.sqrt(ay*ay + az*az)))
+        
+        # Unwrapping-Logik
+        if self.pitch_angle > 80 and pitch_new < 10:
+            self.pitch_offset += 180
+        elif self.pitch_angle < -80 and pitch_new > -10:
+            self.pitch_offset -= 180
+            
+        self.pitch_angle = pitch_new + self.pitch_offset
+        return self.pitch_angle
 
     def on_enter(self):
         if hasattr(self, 'ids') and 'preview' in self.ids:
