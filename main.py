@@ -100,24 +100,24 @@ class CameraApp(MDApp):
             self.camera_screen.distance = "-- m"
 
     def calculate_distance(self):
-        if self.pitch_angle != 0:
+        if self.camera_screen.pitch_angle != 0:
             try:
-                distance = self.phone_height * math.tan(math.radians(self.pitch_angle))
-                return distance
+                distance = self.camera_screen.phone_height * math.tan(math.radians(self.camera_screen.pitch_angle))
+                return f"{distance:.2f} m"
             except ZeroDivisionError:
                 return -1
         else:
             return -1
 
     def calculate_object_height(self):
-        if self.pitch_angle != 0:
+        if self.camera_screen.pitch_angle != 0:
             try:
-                object_height = self.phone_height + (self.distance * math.tan(math.radians(self.pitch_angle)))
-                self.object_height = f"{object_height:.2f} m"
+                object_height = self.camera_screen.phone_height + (self.camera_screen.distance * math.tan(math.radians(self.camera_screen.pitch_angle)))
+                return f"{object_height:.2f} m"
             except ZeroDivisionError:
-                self.object_height = "-- m"
+                return -1
         else:
-            self.object_height = "-- m"
+            return -1
 
     def on_start(self):
         if platform == 'android':
