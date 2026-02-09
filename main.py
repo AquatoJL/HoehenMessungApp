@@ -112,7 +112,7 @@ class CameraApp(MDApp):
     def calculate_object_height(self):
         if self.camera_screen.pitch_angle != 0:
             try:
-                object_height = self.camera_screen.phone_height + (self.camera_screen.distance * math.tan(math.radians(self.camera_screen.pitch_angle)))
+                object_height = self.camera_screen.phone_height + (float(self.camera_screen.distance.replace('m','').strip()) * math.tan(math.radians(self.camera_screen.pitch_angle)))
                 return f"{object_height:.2f} m"
             except ZeroDivisionError:
                 return -1

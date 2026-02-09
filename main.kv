@@ -76,171 +76,172 @@
                 font_size: '16sp'
                 color: 1, 1, 1, 1
     
-    # RECHTE SEITE
-    BoxLayout:
-        orientation: 'vertical'
-        size_hint_x: 0.3
-        padding: dp(10)
-        spacing: dp(10)
-        
-        canvas.before:
-            Color:
-                rgba: 0.2, 0.2, 0.2, 1
-            Rectangle:
-                pos: self.pos
-                size: self.size
-        
-        Widget:
-            size_hint_y: 0.15
+        # RECHTE SEITE
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_x: 0.3
+            padding: dp(10)
+            spacing: dp(10)
+            pos_hint: {"center_x": 0.8, "center_y": 0.5}
+            
+            canvas.before:
+                Color:
+                    rgba: 0.2, 0.2, 0.2, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            
+            Widget:
+                size_hint_y: 0.15
 
-        BoxLayout:
-            orientation: 'horizontal'
-            size_hint_y: None
-            height: dp(50)
-            spacing: dp(8)
-            
-            canvas.before:
-                Color:
-                    rgba: 0.3, 0.3, 0.3, 1
-                RoundedRectangle:
-                    pos: self.pos
-                    size: self.size
-                    radius: [8]
-            
-            Label:
-                text: "Telefonhöhe"
-                font_size: '20sp'
-                color: 1, 1, 1, 1
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: dp(50)
+                spacing: dp(8)
+                
+                canvas.before:
+                    Color:
+                        rgba: 0.3, 0.3, 0.3, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [8]
+                
+                Label:
+                    text: "Telefonhöhe"
+                    font_size: '20sp'
+                    color: 1, 1, 1, 1
 
-        BoxLayout:
-            orientation: 'horizontal'
-            size_hint_y: None
-            height: dp(50)
-            spacing: dp(8)
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: dp(50)
+                spacing: dp(8)
+                
+                canvas.before:
+                    Color:
+                        rgba: 0.3, 0.3, 0.3, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [8]
+                
+                OwnIcon:
+                    icon: "arrow-up-down"
+                    size_hint_x: 0.25
+                
+                TextInput:
+                    id: phone_height_input
+                    text: "1.50"
+                    input_filter: 'float'
+                    font_size: '20sp'
+                    multiline: False
+                    on_text_validate: root.phone_height = float(self.text)
+                    foreground_color: 1, 1, 1, 1
+                    background_color: 0.4, 0.4, 0.4, 1
+                
+                Label:
+                    text: "m"
+                    size_hint_x: 0.2
+                    font_size: '20sp'
+                    color: 1, 1, 1, 1
             
-            canvas.before:
-                Color:
-                    rgba: 0.3, 0.3, 0.3, 1
-                RoundedRectangle:
-                    pos: self.pos
-                    size: self.size
-                    radius: [8]
-            
-            OwnIcon:
-                icon: "arrow-up-down"
-                size_hint_x: 0.25
-            
-            TextInput:
-                id: phone_height_input
-                text: "1.50"
-                input_filter: 'float'
-                font_size: '20sp'
-                multiline: False
-                on_text_validate: root.phone_height = float(self.text)
-                foreground_color: 1, 1, 1, 1
-                background_color: 0.4, 0.4, 0.4, 1
-            
-            Label:
-                text: "m"
-                size_hint_x: 0.2
-                font_size: '20sp'
-                color: 1, 1, 1, 1
-        
-        BoxLayout:
-            orientation: 'horizontal'
-            size_hint_y: None
-            height: dp(50)
-            spacing: dp(8)
-            
-            canvas.before:
-                Color:
-                    rgba: 0.3, 0.3, 0.3, 1
-                RoundedRectangle:
-                    pos: self.pos
-                    size: self.size
-                    radius: [8]
-            
-            Label:
-                text: "Entfernung"
-                font_size: '20sp'
-                color: 1, 1, 1, 1
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: dp(50)
+                spacing: dp(8)
+                
+                canvas.before:
+                    Color:
+                        rgba: 0.3, 0.3, 0.3, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [8]
+                
+                Label:
+                    text: "Entfernung"
+                    font_size: '20sp'
+                    color: 1, 1, 1, 1
 
-        BoxLayout:
-            orientation: 'horizontal'
-            size_hint_y: None
-            height: dp(50)
-            spacing: dp(8)
-            
-            canvas.before:
-                Color:
-                    rgba: 0.3, 0.3, 0.3, 1
-                RoundedRectangle:
-                    pos: self.pos
-                    size: self.size
-                    radius: [8]
-            
-            OwnIcon:
-                icon: "arrow-left-right"
-                size_hint_x: 0.3
-            
-            Label:
-                text: root.distance
-                font_size: '20sp'
-                size_hint_x: 0.7
-                color: 1, 1, 1, 1
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: dp(50)
+                spacing: dp(8)
+                
+                canvas.before:
+                    Color:
+                        rgba: 0.3, 0.3, 0.3, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [8]
+                
+                OwnIcon:
+                    icon: "arrow-left-right"
+                    size_hint_x: 0.3
+                
+                Label:
+                    text: root.distance
+                    font_size: '20sp'
+                    size_hint_x: 0.7
+                    color: 1, 1, 1, 1
 
-        BoxLayout:
-            orientation: 'horizontal'
-            size_hint_y: None
-            height: dp(50)
-            spacing: dp(8)
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: dp(50)
+                spacing: dp(8)
+                
+                canvas.before:
+                    Color:
+                        rgba: 0.3, 0.3, 0.3, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [8]
+                
+                Label:
+                    text: "Höhe"
+                    font_size: '20sp'
+                    color: 1, 1, 1, 1
             
-            canvas.before:
-                Color:
-                    rgba: 0.3, 0.3, 0.3, 1
-                RoundedRectangle:
-                    pos: self.pos
-                    size: self.size
-                    radius: [8]
+            BoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: dp(50)
+                spacing: dp(8)
+                
+                canvas.before:
+                    Color:
+                        rgba: 0.3, 0.3, 0.3, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [8]
+                
+                OwnIcon:
+                    icon: "arrow-up-down"
+                    size_hint_x: 0.3
+                
+                Label:
+                    text: root.object_height
+                    font_size: '20sp'
+                    size_hint_x: 0.7
+                    color: 1, 1, 1, 1
             
-            Label:
-                text: "Höhe"
-                font_size: '20sp'
-                color: 1, 1, 1, 1
-        
-        BoxLayout:
-            orientation: 'horizontal'
-            size_hint_y: None
-            height: dp(50)
-            spacing: dp(8)
-            
-            canvas.before:
-                Color:
-                    rgba: 0.3, 0.3, 0.3, 1
-                RoundedRectangle:
-                    pos: self.pos
-                    size: self.size
-                    radius: [8]
-            
-            OwnIcon:
-                icon: "arrow-up-down"
-                size_hint_x: 0.3
-            
-            Label:
-                text: root.object_height
-                font_size: '20sp'
-                size_hint_x: 0.7
-                color: 1, 1, 1, 1
-        
-        # Button unten
-        Button:
-            text: root.button_text
-            size_hint_y: None
-            height: dp(60)
-            background_color: 1, 0, 0, 1
-            font_size: '18sp'
-            bold: True
-            on_press: app.measure()
+            # Button unten
+            Button:
+                text: root.button_text
+                size_hint_y: None
+                height: dp(60)
+                background_color: 1, 0, 0, 1
+                font_size: '18sp'
+                bold: True
+                on_press: app.measure()
 
-        Widget:
-            size_hint_y: 0.15
+            Widget:
+                size_hint_y: 0.15
