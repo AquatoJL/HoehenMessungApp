@@ -93,7 +93,7 @@ class CameraApp(MDApp):
             self.camera_screen.distance = self.calculate_distance()
         elif self.camera_screen.button_text == "Höhe messen":
             self.camera_screen.button_text = "Zurücksetzen"
-            #self.calculate_object_height()
+            self.camera_screen.object_height = self.calculate_object_height()
         else:
             self.camera_screen.button_text = "Entfernung messen"
             self.camera_screen.object_height = "-- m"
