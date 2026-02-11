@@ -6,8 +6,7 @@ if platform == 'android':
     from kivy.uix.modalview import ModalView
     from kivy.clock import Clock
     from android import api_version, mActivity
-    from android.permissions import request_permissions, check_permission, \
-        Permission
+    from android.permissions import request_permissions, check_permission, Permission
 
 class AndroidPermissions:
     def __init__(self, start_app = None):
