@@ -14,7 +14,7 @@ class AndroidPermissions:
         self.permission_dialog_count = 0
         self.start_app = start_app
         if platform == 'android':
-            self.permissions = [Permission.CAMERA, Permission.RECORD_AUDIO]
+            self.permissions = [Permission.CAMERA]
             if api_version < 29:
                 self.permissions.append(Permission.WRITE_EXTERNAL_STORAGE)
             self.permission_status([],[])

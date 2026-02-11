@@ -22,7 +22,7 @@ android.enable_androidx = True
 android.archs = arm64-v8a
 android.allow_backup = True
 
-p4a.hook = camerax_provider/gradle_options.py
+#p4a.hook = camerax_provider/gradle_options.py
 
 ios.kivy_ios_url = https://github.com/kivy/kivy-ios
 ios.kivy_ios_branch = master
