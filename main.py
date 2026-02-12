@@ -74,19 +74,9 @@ class CameraScreen(BoxLayout):
             pass
 
     def calculate_pitch(self, ax, ay, az):
-        norm = math.sqrt(ax*ax + ay*ay + az*az)
-        if norm == 0: return self.pitch_angle
-        ax, ay, az = ax/norm, ay/norm, az/norm
-        
-        pitch_new = math.degrees(math.atan2(ax, math.sqrt(ay*ay + az*az)))
-        
-        # Unwrapping-Logik
-        if self.pitch_angle > 80 and pitch_new < 10:
-            self.pitch_offset += 180
-        elif self.pitch_angle < -80 and pitch_new > -10:
-            self.pitch_offset -= 180
-            
-        self.pitch_angle = pitch_new + self.pitch_offset
+        self.pitch_angle = math.degrees(math.atan2(ax, math.sqrt(ay*ay + az*az)))
+        if az < 0:
+            self.pitch_angle += 2*(90-self.pitch_angle)
         return self.pitch_angle
 
     def on_enter(self):
