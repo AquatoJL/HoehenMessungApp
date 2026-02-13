@@ -17,6 +17,19 @@ except ImportError:
 
 if platform == 'android':
     from android_permissions import AndroidPermissions
+    from jnius import autoclass
+    from android.runnable import run_on_ui_thread
+    from android import mActivity
+
+    View = autoclass('android.view.View')
+
+    @run_on_ui_thread
+    def set_fullscreen(instance, width, height):
+        mActivity.getWindow().getDecorView().setSystemUiVisibility(
+            View.SYSTEM_UI_FLAG_FULLSCREEN |
+            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+            View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        )
 
 class CameraScreen(BoxLayout):
     accelX = StringProperty("X: 0.0")
@@ -52,6 +65,7 @@ class CameraScreen(BoxLayout):
             if not accel == (None, None, None):
                 ax, ay, az = accel
                 
+                # Pitch & Roll aus Accelerometer berechnen (in Grad)
                 self.pitch_angle = self.calculate_pitch(ax, ay, az)
                 self.roll_angle = math.degrees(math.atan2(ay, math.sqrt(ax*ax + az*az)))
 
@@ -120,6 +134,8 @@ class CameraApp(MDApp):
 
     def on_start(self):
         if platform == 'android':
+            Window.bind(on_resize=set_fullscreen)
+            set_fullscreen(None, Window.width, Window.height)
             self.dont_gc = AndroidPermissions(self.start_camera)
         else:
             self.start_camera()
