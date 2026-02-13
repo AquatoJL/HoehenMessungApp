@@ -10,11 +10,10 @@ from camera4kivy import Preview
 import math
 
 try:
-    from plyer import accelerometer, compass, gyroscope
+    from plyer import accelerometer
     SENSORS_AVAILABLE = True
 except ImportError:
     SENSORS_AVAILABLE = False
-    print("Plyer nicht verfügbar - Sensoren deaktiviert")
 
 if platform == 'android':
     from android_permissions import AndroidPermissions
@@ -54,7 +53,10 @@ class CameraScreen(BoxLayout):
         self.pitch_offset = 0.0
 
     def start_sensor_updates(self):
-        accelerometer.enable()
+        try:
+            accelerometer.enable()
+        except:
+            return
         Clock.schedule_interval(self.update_sensors, 0.1)
 
     def update_sensors(self, dt):
