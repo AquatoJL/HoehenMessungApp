@@ -7,6 +7,7 @@ from kivy.utils import platform
 from kivy.properties import StringProperty, NumericProperty
 from kivy.clock import Clock
 from camera4kivy import Preview
+from settings import AppSettings
 import math
 
 try:
@@ -40,7 +41,7 @@ class CameraScreen(BoxLayout):
     roll_angle = NumericProperty(0.0)
 
     button_text = StringProperty("Entfernung messen")
-    phone_height = NumericProperty(1.5)
+    phone_height = NumericProperty()
     object_height = StringProperty("-- m")
     distance = StringProperty("-- m")
 
@@ -48,8 +49,13 @@ class CameraScreen(BoxLayout):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.settings = AppSettings("hoehenmessung")
+        self.phone_height = self.settings.get('phone_height')
         if SENSORS_AVAILABLE:
             self.start_sensor_updates()
+
+    def on_phone_height(self, instance, value):
+        self.settings.set('phone_height', value)
 
     def start_sensor_updates(self):
         try:
