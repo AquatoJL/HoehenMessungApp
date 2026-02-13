@@ -50,7 +50,6 @@ class CameraScreen(BoxLayout):
         super().__init__(**kwargs)
         if SENSORS_AVAILABLE:
             self.start_sensor_updates()
-        self.pitch_offset = 0.0
 
     def start_sensor_updates(self):
         try:
@@ -65,13 +64,16 @@ class CameraScreen(BoxLayout):
             if not accel == (None, None, None):
                 ax, ay, az = accel
                 
-                # Pitch & Roll aus Accelerometer berechnen (in Grad)
                 self.pitch_angle = self.calculate_pitch(ax, ay, az)
                 self.roll_angle = math.degrees(math.atan2(ay, math.sqrt(ax*ax + az*az)))
 
                 self.accelX = f"X: {accel[0]:.2f}"
                 self.accelY = f"Y: {accel[1]:.2f}"
                 self.accelZ = f"Z: {accel[2]:.2f}"
+                if self.button_text == "Entfernung messen":
+                    self.calculate_distance()
+                elif self.button_text == "Höhe messen":
+                    self.calculate_object_height()
         except:
             pass
 
@@ -80,6 +82,26 @@ class CameraScreen(BoxLayout):
         if az < 0:
             self.pitch_angle += 2*(90-self.pitch_angle)
         return self.pitch_angle
+    
+    def calculate_distance(self):
+        if self.pitch_angle != 0:
+            try:
+                distance = self.phone_height * math.tan(math.radians(self.pitch_angle))
+                self.distance = f"{distance:.2f} m"
+            except:
+                self.distance = "-- m"
+        else:
+            self.distance = "-- m"
+
+    def calculate_object_height(self):
+        if self.pitch_angle != 0:
+            try:
+                object_height = self.phone_height + (float(self.distance.replace('m','').strip()) * math.tan(math.radians(self.pitch_angle-90)))
+                self.object_height = f"{abs(object_height):.2f} m"
+            except:
+                self.distance = "-- m"
+        else:
+            self.distance = "-- m"
 
     def on_enter(self):
         if hasattr(self, 'ids') and 'preview' in self.ids:
@@ -100,37 +122,15 @@ class CameraApp(MDApp):
     def measure(self):
         if self.camera_screen.button_text == "Entfernung messen":
             self.camera_screen.button_text = "Höhe messen"
-            self.camera_screen.distance = self.calculate_distance()
             self.camera_screen.icon = "arrow-expand-vertical"
         elif self.camera_screen.button_text == "Höhe messen":
             self.camera_screen.button_text = "Zurücksetzen"
-            self.camera_screen.object_height = self.calculate_object_height()
             self.camera_screen.icon = "refresh"
         else:
             self.camera_screen.button_text = "Entfernung messen"
             self.camera_screen.object_height = "-- m"
             self.camera_screen.distance = "-- m"
             self.camera_screen.icon = "arrow-expand-horizontal"
-
-    def calculate_distance(self):
-        if self.camera_screen.pitch_angle != 0:
-            try:
-                distance = self.camera_screen.phone_height * math.tan(math.radians(self.camera_screen.pitch_angle))
-                return f"{distance:.2f} m"
-            except ZeroDivisionError:
-                return "-- m"
-        else:
-            return "-- m"
-
-    def calculate_object_height(self):
-        if self.camera_screen.pitch_angle != 0:
-            try:
-                object_height = self.camera_screen.phone_height + (float(self.camera_screen.distance.replace('m','').strip()) * math.tan(math.radians(self.camera_screen.pitch_angle-90)))
-                return f"{abs(object_height):.2f} m"
-            except ZeroDivisionError:
-                return "-- m"
-        else:
-            return "-- m"
 
     def on_start(self):
         if platform == 'android':
