@@ -29,7 +29,6 @@ class AppSettings:
             if os.path.exists(self.settings_file):
                 with open(self.settings_file, 'r', encoding='utf-8') as f:
                     settings = json.load(f)
-                    print(settings)
                     for key, value in settings.items():
                         settings[key] = value
                     return settings

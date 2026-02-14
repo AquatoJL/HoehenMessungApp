@@ -37,8 +37,8 @@ class CameraScreen(BoxLayout):
     accelY = StringProperty("Y: 0.0")
     accelZ = StringProperty("Z: 0.0")
 
-    pitch_angle = NumericProperty(0.0)
     roll_angle = NumericProperty(0.0)
+    tilt_angle = NumericProperty(0.0)
 
     button_text = StringProperty("Entfernung messen")
     phone_height = NumericProperty()
@@ -70,12 +70,13 @@ class CameraScreen(BoxLayout):
             if not accel == (None, None, None):
                 ax, ay, az = accel
                 
-                self.pitch_angle = self.calculate_pitch(ax, ay, az)
+                self.calculate_tilt(ax, ay, az)
                 self.roll_angle = math.degrees(math.atan2(ay, math.sqrt(ax*ax + az*az)))
 
                 self.accelX = f"X: {accel[0]:.2f}"
                 self.accelY = f"Y: {accel[1]:.2f}"
                 self.accelZ = f"Z: {accel[2]:.2f}"
+
                 if self.button_text == "Entfernung messen":
                     self.calculate_distance()
                 elif self.button_text == "Höhe messen":
@@ -83,16 +84,19 @@ class CameraScreen(BoxLayout):
         except:
             pass
 
-    def calculate_pitch(self, ax, ay, az):
-        self.pitch_angle = math.degrees(math.atan2(ax, math.sqrt(ay*ay + az*az)))
+    def calculate_tilt(self, ax, ay, az):
+        accel_magnitude = math.sqrt(ax*ax + ay*ay + az*az)
+        if accel_magnitude > 0:
+            self.tilt_angle = math.degrees(math.acos(abs(az) / accel_magnitude))
         if az < 0:
-            self.pitch_angle += 2*(90-self.pitch_angle)
-        return self.pitch_angle
+            self.tilt_angle += 2*(90-self.tilt_angle)
     
     def calculate_distance(self):
-        if self.pitch_angle != 0:
+        if self.tilt_angle > 90:
+            self.distance = "MAX"
+        elif self.tilt_angle != 0:
             try:
-                distance = self.phone_height * math.tan(math.radians(self.pitch_angle))
+                distance = self.phone_height * math.tan(math.radians(self.tilt_angle))
                 self.distance = f"{distance:.2f} m"
             except:
                 self.distance = "-- m"
@@ -100,9 +104,9 @@ class CameraScreen(BoxLayout):
             self.distance = "-- m"
 
     def calculate_object_height(self):
-        if self.pitch_angle != 0:
+        if self.tilt_angle != 0:
             try:
-                object_height = self.phone_height + (float(self.distance.replace('m','').strip()) * math.tan(math.radians(self.pitch_angle-90)))
+                object_height = self.phone_height + (float(self.distance.replace('m','').strip()) * math.tan(math.radians(self.tilt_angle-90)))
                 self.object_height = f"{abs(object_height):.2f} m"
             except:
                 self.distance = "-- m"

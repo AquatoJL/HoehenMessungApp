@@ -77,25 +77,47 @@
 
             canvas.before:
                 Color:
-                    rgba: 0.459, 0.459, 0.459, 0.271
+                    rgba: 0.4, 0.4, 0.4, 0.3
                 RoundedRectangle:
-                    pos: self.pos
-                    size: self.size
+                    pos: self.pos[0], self.pos[1] + dp(5)
+                    size: self.size[0] + dp(15), self.size[1]
                     radius: [12]
 
             OwnLabel:
-                text: "Pitch"            
+                text: "Neigung"            
 
             OwnLabel:
-                text: "Roll"
+                text: "Wasserwaage"
 
             MeasureLabel:
-                text: str(round(root.pitch_angle, 1))
+                text: str(round(root.tilt_angle, 1))
 
             MeasureLabel:
-                text: str(round(root.roll_angle, 1))
+
+                canvas.before:
+                    Color:
+                        rgba: 0, 0.5, 0, 1
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                    
+                    Color:
+                        rgba: 0, 0, 0, 1
+                    Line:
+                        width: 1
+                        points: [self.center_x-dp(20), self.y, self.center_x-dp(20), self.top]
+                    Line:
+                        width: 1
+                        points: [self.center_x+dp(20), self.y, self.center_x+dp(20), self.top]
+                
+                canvas:
+                    Color:
+                        rgba: 0.3, 1, 0.3, 0.5
+                    Ellipse:
+                        pos: self.center_x + -root.roll_angle * dp(0.57) - dp(8), self.center_y - dp(8)
+                        size: dp(16), dp(16)
     
-    BoxLayout:
+    MDBoxLayout:
         orientation: 'vertical'
         size_hint_x: 0.25
         padding: dp(10)
@@ -144,7 +166,7 @@
                 foreground_color: 1, 1, 1, 1
                 background_color: 0.4, 0.4, 0.4, 1
                 halign: "center"
-                valign: "middle"
+                valign: "bottom"
                 text_size: self.size
             
             OwnLabel:
