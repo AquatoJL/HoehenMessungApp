@@ -55,7 +55,10 @@ class CameraScreen(BoxLayout):
             self.start_sensor_updates()
 
     def on_phone_height(self, instance, value):
-        self.settings.set('phone_height', value)
+        valid_height = max(1.0, min(2.0, value))
+        if value != valid_height:
+            self.phone_height = valid_height
+        self.settings.set('phone_height', valid_height)
 
     def start_sensor_updates(self):
         try:
@@ -92,7 +95,7 @@ class CameraScreen(BoxLayout):
             self.tilt_angle += 2*(90-self.tilt_angle)
     
     def calculate_distance(self):
-        if self.tilt_angle > 90:
+        if self.tilt_angle >= 90:
             self.distance = "MAX"
         elif self.tilt_angle != 0:
             try:
@@ -109,9 +112,9 @@ class CameraScreen(BoxLayout):
                 object_height = self.phone_height + (float(self.distance.replace('m','').strip()) * math.tan(math.radians(self.tilt_angle-90)))
                 self.object_height = f"{abs(object_height):.2f} m"
             except:
-                self.distance = "-- m"
+                self.object_height = "-- m"
         else:
-            self.distance = "-- m"
+            self.object_height = "-- m"
 
     def on_enter(self):
         if hasattr(self, 'ids') and 'preview' in self.ids:

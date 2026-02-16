@@ -162,11 +162,11 @@
                 input_filter: 'float'
                 font_size: '15sp'
                 multiline: False
-                on_text_validate: root.phone_height = float(self.text)
+                on_text_validate: root.phone_height = round(float(self.text),1)
                 foreground_color: 1, 1, 1, 1
                 background_color: 0.4, 0.4, 0.4, 1
                 halign: "center"
-                valign: "bottom"
+                valign: "top"
                 text_size: self.size
             
             OwnLabel:
