@@ -4,7 +4,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivymd.uix.floatlayout import MDFloatLayout
 from kivy.lang import Builder
 from kivy.utils import platform
-from kivy.properties import StringProperty, NumericProperty
+from kivy.properties import StringProperty, NumericProperty, ListProperty
 from kivy.clock import Clock
 from camera4kivy import Preview
 from settings import AppSettings
@@ -41,11 +41,14 @@ class CameraScreen(BoxLayout):
     tilt_angle = NumericProperty(0.0)
 
     button_text = StringProperty("Entfernung messen")
+    icon = StringProperty("arrow-expand-horizontal")
+    
     phone_height = NumericProperty()
     object_height = StringProperty("-- m")
     distance = StringProperty("-- m")
 
-    icon = StringProperty("arrow-expand-horizontal")
+    distance_background_color = ListProperty([0, 0.3, 0, 1])
+    height_background_color = ListProperty([0.3, 0.3, 0.3, 1])
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -136,14 +139,18 @@ class CameraApp(MDApp):
         if self.camera_screen.button_text == "Entfernung messen":
             self.camera_screen.button_text = "Höhe messen"
             self.camera_screen.icon = "arrow-expand-vertical"
+            self.camera_screen.distance_background_color = [0.3, 0.3, 0.3, 1]
+            self.camera_screen.height_background_color = [0, 0.3, 0, 1]
         elif self.camera_screen.button_text == "Höhe messen":
             self.camera_screen.button_text = "Zurücksetzen"
             self.camera_screen.icon = "refresh"
+            self.camera_screen.height_background_color = [0.3, 0.3, 0.3, 1]
         else:
             self.camera_screen.button_text = "Entfernung messen"
             self.camera_screen.object_height = "-- m"
             self.camera_screen.distance = "-- m"
             self.camera_screen.icon = "arrow-expand-horizontal"
+            self.camera_screen.distance_background_color = [0, 0.3, 0, 1]
 
     def on_start(self):
         if platform == 'android':
