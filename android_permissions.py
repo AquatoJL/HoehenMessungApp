@@ -9,6 +9,7 @@ if platform == 'android':
     from android.permissions import request_permissions, check_permission, Permission
 
 class AndroidPermissions:
+    """Verwaltet Android-Runtime-Permissions für die App (z. B. Kamera/Storage)."""
     def __init__(self, start_app = None):
         self.permission_dialog_count = 0
         self.start_app = start_app
@@ -21,6 +22,11 @@ class AndroidPermissions:
             self.start_app()
 
     def permission_status(self, permissions, grants):
+        """Callback für den aktuellen Permission-Status.
+
+        Prüft per `check_permission`, ob alle benötigten Permissions gewährt sind.
+        Wenn ja, wird `start_app` ausgeführt. Andernfalls wird erneut
+        ein Permission-Dialog geplant."""
         granted = True
         for p in self.permissions:
             granted = granted and check_permission(p)
@@ -28,8 +34,9 @@ class AndroidPermissions:
             if self.start_app:
                 self.start_app()
         elif self.permission_dialog_count < 2:
-            Clock.schedule_once(self.permission_dialog)  
+            Clock.schedule_once(self.permission_dialog)
         
     def permission_dialog(self, dt):
+        """Fordert die benötigten Permissions über den Android-Dialog an."""
         self.permission_dialog_count += 1
         request_permissions(self.permissions, self.permission_status)
