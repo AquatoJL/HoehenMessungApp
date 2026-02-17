@@ -53,7 +53,7 @@ class CameraScreen(BoxLayout):
     height_background_color = ListProperty([0.3, 0.3, 0.3, 1])
 
     def __init__(self, **kwargs):
-        """Initialisiert Settings, lädt Telefonhöhe und startet Sensor-Updates."""
+        """Initialisiert Einstellungen, lädt Telefonhöhe und startet Sensor-Updates."""
         super().__init__(**kwargs)
         self.settings = AppSettings("hoehenmessung")
         self.phone_height = self.settings.get('phone_height')
@@ -61,13 +61,14 @@ class CameraScreen(BoxLayout):
             self.start_sensor_updates()
 
     def on_phone_height(self, instance, value):
+        """Validiert und begrenzt die Gerätehöhe auf 1,0–2,0 m und speichert sie persistent."""
         valid_height = max(1.0, min(2.0, value))
         if value != valid_height:
             self.phone_height = valid_height
         self.settings.set('phone_height', valid_height)
 
     def start_sensor_updates(self):
-        """Aktiviert den Accelerometer und plant periodische Updates ein."""
+        """Aktiviert den Accelerometer und registriert die periodische Aktualisierungen über die Kivy-Clock."""
         try:
             accelerometer.enable()
         except:
@@ -75,7 +76,7 @@ class CameraScreen(BoxLayout):
         Clock.schedule_interval(self.update_sensors, 0.1)
 
     def update_sensors(self, dt):
-        """Liest Sensorwerte, aktualisiert UI-Properties und triggert Berechnungen."""
+        """Liest aktuelle Sensorwerte, berechnet Tilt/Roll und aktualisiert die Properties sowie Distanz bzw. Objekt­höhe abhängig vom Status."""
         try:
             accel = accelerometer.acceleration[:3]
             if not accel == (None, None, None):
@@ -104,7 +105,7 @@ class CameraScreen(BoxLayout):
             self.tilt_angle += 2*(90-self.tilt_angle)
     
     def calculate_distance(self):
-        """Berechnet die Entfernung aus Telefonhöhe und Neigungswinkel."""
+        """Berechnet die Entfernung aus Telefonhöhe und Neigungswinkel oder setzt Sonderwerte ("MAX", "-- m")."""
         if self.tilt_angle >= 90:
             self.distance = "MAX"
         elif self.tilt_angle != 0:
@@ -117,7 +118,7 @@ class CameraScreen(BoxLayout):
             self.distance = "-- m"
 
     def calculate_object_height(self):
-        """Berechnet die Objekt-Höhe basierend auf Entfernung und Neigungswinkel."""
+        """Berechnet die Objekt-Höhe anhand gespeicherter Entfernung und aktuellem Neigungswinkel."""
         if self.tilt_angle != 0:
             try:
                 object_height = self.phone_height + (float(self.distance.replace('m','').strip()) * math.tan(math.radians(self.tilt_angle-90)))
@@ -139,7 +140,7 @@ class CameraScreen(BoxLayout):
             self.ids.preview.disconnect_camera()
 
 class CameraApp(MDApp):
-    """KivyMD App-Wrapper: lädt KV, verwaltet Screen und Mess-State-Maschine."""
+    """KivyMD-App, die die KV lädt, `CameraScreen` verwaltet und den Messmodus umschaltet."""
     def build(self):
         """Baut die App-Oberfläche auf, lädt KV-Datei und erstellt `CameraScreen`."""
         Window.orientation = 'landscape'
@@ -169,7 +170,7 @@ class CameraApp(MDApp):
             self.camera_screen.distance_background_color = [0, 0.3, 0, 1]
 
     def on_start(self):
-        """Start-Hook: Setzt Android Fullscreen und startet Kamera nach Permissions."""
+        """Setzt unter Android Vollbild, initialisiert Berechtigungen und startet die Kamera."""
         if platform == 'android':
             Window.bind(on_resize=set_fullscreen)
             set_fullscreen(None, Window.width, Window.height)
@@ -178,12 +179,12 @@ class CameraApp(MDApp):
             self.start_camera()
 
     def on_stop(self):
-        """Stop-Hook: Trennt Kamera sauber."""
+        """Ruft on_leave() auf, um die Kamera zu stoppen."""
         if hasattr(self.camera_screen, 'on_leave'):
             self.camera_screen.on_leave()
 
     def start_camera(self):
-        """Startet die Kamera-Preview"""
+        """Ruft on_enter() auf, um die Kamera zu starten."""
         self.dont_gc = None
         if hasattr(self.camera_screen, 'on_enter'):
             self.camera_screen.on_enter()

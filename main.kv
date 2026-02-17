@@ -26,14 +26,13 @@
 <OwnIcon@MDIcon>:
     theme_icon_color: "Custom"
     color: 1, 1, 1, 1
-    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+    pos_hint: {"center_y": 0.5}
 
 <OwnLabel@MDLabel>
     theme_text_color: "Custom"
     text_color: 1, 1, 1, 1
     halign: "center"
     valign: "middle"
-    font_size: self.height * 0.4
 
 <MeasureLabel@MDLabel>
     font_size: '40sp'
@@ -65,8 +64,8 @@
             cols: 2
             rows: 2
             size_hint: None, None
-            height: root.height * 0.2
-            width: root.width * 0.3
+            height: dp(90)
+            width: dp(250)
             spacing: dp(24)
             pos_hint: {"center_x": 0.5, "center_y": 0.2}
             row_force_default: True
@@ -76,17 +75,15 @@
                 Color:
                     rgba: 0.4, 0.4, 0.4, 0.3
                 RoundedRectangle:
-                    pos: self.pos[0], self.pos[1] * 1.07
-                    size: self.size[0] * 1.07, self.size[1] 
+                    pos: self.pos[0], self.pos[1] + dp(5)
+                    size: self.size[0] + dp(15), self.size[1] 
                     radius: [12]
 
             OwnLabel:
                 text: "Neigung"
-                font_size: root.width * 0.015 + root.height * 0.01
 
             OwnLabel:
                 text: "Wasserwaage"
-                font_size: root.width * 0.015 + root.height * 0.01
 
             MeasureLabel:
                 text: str(round(root.tilt_angle, 1))
@@ -151,7 +148,7 @@
                     pos: self.pos
                     size: self.size
                     radius: [8]
-            
+
             OwnIcon:
                 icon: "arrow-up-down"
             
@@ -159,13 +156,13 @@
                 id: phone_height_input
                 text: str(root.phone_height)
                 input_filter: 'float'
-                font_size: self.height * 0.2 + self.width * 0.1
+                font_size: '15sp'
                 multiline: False
                 on_text_validate: root.phone_height = round(float(self.text),1)
                 foreground_color: 1, 1, 1, 1
                 background_color: 0.4, 0.4, 0.4, 1
                 halign: "center"
-                padding_y: self.height * 0.25, 0
+                padding_y: dp(17), 0
 
             
             OwnLabel:
@@ -232,7 +229,7 @@
             icon: root.icon
             size_hint_x: 1
             size_hint_y: 1
-            font_size: self.width * 0.085
+            font_size: '16sp'
             md_bg_color: 0.7, 0, 0, 1
             on_press: app.measure()
 

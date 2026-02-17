@@ -3,14 +3,14 @@ import os
 from kivy.utils import platform
 
 class AppSettings:
-    """Einfache App-Einstellungen, die in einer JSON-Datei gespeichert werden. Der Pfad ist plattformabhängig."""
+    """Verwaltung der App-Einstellungen, die in einer JSON-Datei gespeichert werden, inkl. Laden, Speichern und Löschen einer Datei pro settings_key."""
     def __init__(self, settings_key="hoehenmessung"):
         """Lädt vorhandene App-Einstellungen und speichert den Pfad für die JSON-Datei."""
         self.settings_file = self._get_settings_path(settings_key)
         self.settings = self.load()
     
     def _get_settings_path(self, settings_key):
-        """Ermittelt den Speicherpfad für die JSON-Datei."""
+        """Ermittelt den Speicherpfad abhängig von der Plattform und legt das Verzeichnis an."""
         if platform == 'android':
             try:
                 from android.storage import app_storage_path
@@ -59,7 +59,7 @@ class AppSettings:
         self.save()
     
     def delete(self):
-        """Löscht die Settings-Datei, falls vorhanden."""
+        """Löscht die JSON-Datei, falls vorhanden."""
         try:
             if os.path.exists(self.settings_file):
                 os.remove(self.settings_file)
