@@ -26,7 +26,10 @@
 <OwnIcon@MDIcon>:
     theme_icon_color: "Custom"
     color: 1, 1, 1, 1
-    pos_hint: {"center_y": 0.5}
+    valign: "middle"
+    halign: "center"
+    text_size: self.size
+    pos_hint: {"center_x": 1, "center_y": 0.5}
 
 <OwnLabel@MDLabel>
     theme_text_color: "Custom"
@@ -148,6 +151,9 @@
                     pos: self.pos
                     size: self.size
                     radius: [8]
+            
+            Widget:
+                size_hint_x: 0.05
 
             OwnIcon:
                 icon: "arrow-up-down"
@@ -162,7 +168,7 @@
                 foreground_color: 1, 1, 1, 1
                 background_color: 0.4, 0.4, 0.4, 1
                 halign: "center"
-                padding_y: dp(17), 0
+                padding_y: dp(5), 0
 
             
             OwnLabel:
@@ -191,6 +197,9 @@
                     size: self.size
                     radius: [8]
             
+            Widget:
+                size_hint_x: 0.05
+
             OwnIcon:
                 icon: "arrow-expand-horizontal"
             
@@ -217,6 +226,9 @@
                     pos: self.pos
                     size: self.size
                     radius: [8]
+            
+            Widget:
+                size_hint_x: 0.05
             
             OwnIcon:
                 icon: "arrow-expand-vertical"
