@@ -132,21 +132,21 @@ class CameraScreen(BoxLayout):
 
     def toggle_mode(self):
         """Schaltet den Messmodus um (Entfernung → Höhe → Reset). Aktualisiert Button-Text, Icon und UI-Farben."""
-        if self.camera_screen.button_text == "Entfernung messen":
-            self.camera_screen.button_text = "Höhe messen"
-            self.camera_screen.icon = "arrow-expand-vertical"
-            self.camera_screen.distance_background_color = [0.3, 0.3, 0.3, 1]
-            self.camera_screen.height_background_color = [0, 0.3, 0, 1]
-        elif self.camera_screen.button_text == "Höhe messen":
-            self.camera_screen.button_text = "Zurücksetzen"
-            self.camera_screen.icon = "refresh"
-            self.camera_screen.height_background_color = [0.3, 0.3, 0.3, 1]
+        if self.button_text == "Entfernung messen":
+            self.button_text = "Höhe messen"
+            self.icon = "arrow-expand-vertical"
+            self.distance_background_color = [0.3, 0.3, 0.3, 1]
+            self.height_background_color = [0, 0.3, 0, 1]
+        elif self.button_text == "Höhe messen":
+            self.button_text = "Zurücksetzen"
+            self.icon = "refresh"
+            self.height_background_color = [0.3, 0.3, 0.3, 1]
         else:
-            self.camera_screen.button_text = "Entfernung messen"
-            self.camera_screen.object_height = "-- m"
-            self.camera_screen.distance = "-- m"
-            self.camera_screen.icon = "arrow-expand-horizontal"
-            self.camera_screen.distance_background_color = [0, 0.3, 0, 1]
+            self.button_text = "Entfernung messen"
+            self.object_height = "-- m"
+            self.distance = "-- m"
+            self.icon = "arrow-expand-horizontal"
+            self.distance_background_color = [0, 0.3, 0, 1]
 
     def on_enter(self):
         """Verbindet die Kamera-Preview (falls vorhanden)."""
