@@ -100,9 +100,14 @@ class CameraScreen(BoxLayout):
         """Berechnet den Neigungswinkel aus Accelerometer-Daten."""
         accel_magnitude = math.sqrt(ax*ax + ay*ay + az*az)
         if accel_magnitude > 0:
-            self.tilt_angle = math.degrees(math.acos(abs(az) / accel_magnitude))
-        if az < 0:
-            self.tilt_angle += 2*(90-self.tilt_angle)
+            tilt_angle = math.degrees(math.acos(abs(az) / accel_magnitude))
+            if az < 0:
+                tilt_angle += 2*(90-tilt_angle)
+            if ax < 0:
+                tilt_angle *= -1
+        else:
+            tilt_angle = 0
+        self.tilt_angle = tilt_angle
     
     def calculate_distance(self):
         """Berechnet die Entfernung aus Telefonhöhe und Neigungswinkel oder setzt Sonderwerte ("MAX", "-- m")."""
@@ -119,14 +124,16 @@ class CameraScreen(BoxLayout):
 
     def calculate_object_height(self):
         """Berechnet die Objekt-Höhe anhand gespeicherter Entfernung und aktuellem Neigungswinkel."""
-        if self.tilt_angle != 0:
+        if self.tilt_angle < 10:
+            self.object_height = "MIN"
+        elif self.tilt_angle > 170:
+            self.object_height = "MAX"
+        else:
             try:
                 object_height = self.phone_height + (float(self.distance.replace('m','').strip()) * math.tan(math.radians(self.tilt_angle-90)))
                 self.object_height = f"{abs(object_height):.2f} m"
             except:
                 self.object_height = "-- m"
-        else:
-            self.object_height = "-- m"
 
     def on_enter(self):
         """Verbindet die Kamera-Preview (falls vorhanden)."""
