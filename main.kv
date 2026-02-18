@@ -161,7 +161,7 @@
                 id: phone_height_input
                 text: str(root.phone_height)
                 input_filter: 'float'
-                font_size: '15sp'
+                font_size: '16sp'
                 multiline: False
                 on_text_validate: root.phone_height = round(float(self.text),1)
                 foreground_color: 1, 1, 1, 1
@@ -242,6 +242,6 @@
             size_hint_y: 1
             font_size: '16sp'
             md_bg_color: 0.7, 0, 0, 1
-            on_press: app.measure()
+            on_press: root.toggle_mode()
 
         Widget:

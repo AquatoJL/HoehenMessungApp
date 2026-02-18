@@ -61,7 +61,7 @@ class CameraScreen(BoxLayout):
             self.start_sensor_updates()
 
     def on_phone_height(self, instance, value):
-        """Validiert und begrenzt die Gerätehöhe auf 1,0–2,0 m und speichert sie persistent."""
+        """Validiert und begrenzt die Gerätehöhe auf 1,0–2,0 m und speichert sie persistent."""
         valid_height = max(1.0, min(2.0, value))
         if value != valid_height:
             self.phone_height = valid_height
@@ -100,14 +100,9 @@ class CameraScreen(BoxLayout):
         """Berechnet den Neigungswinkel aus Accelerometer-Daten."""
         accel_magnitude = math.sqrt(ax*ax + ay*ay + az*az)
         if accel_magnitude > 0:
-            tilt_angle = math.degrees(math.acos(abs(az) / accel_magnitude))
-            if az < 0:
-                tilt_angle += 2*(90-tilt_angle)
-            if ax < 0:
-                tilt_angle *= -1
+            self.tilt_angle = math.degrees(math.acos(az / accel_magnitude))
         else:
-            tilt_angle = 0
-        self.tilt_angle = tilt_angle
+            self.tilt_angle = 0
     
     def calculate_distance(self):
         """Berechnet die Entfernung aus Telefonhöhe und Neigungswinkel oder setzt Sonderwerte ("MAX", "-- m")."""
@@ -135,6 +130,24 @@ class CameraScreen(BoxLayout):
             except:
                 self.object_height = "-- m"
 
+    def toggle_mode(self):
+        """Schaltet den Messmodus um (Entfernung → Höhe → Reset). Aktualisiert Button-Text, Icon und UI-Farben."""
+        if self.camera_screen.button_text == "Entfernung messen":
+            self.camera_screen.button_text = "Höhe messen"
+            self.camera_screen.icon = "arrow-expand-vertical"
+            self.camera_screen.distance_background_color = [0.3, 0.3, 0.3, 1]
+            self.camera_screen.height_background_color = [0, 0.3, 0, 1]
+        elif self.camera_screen.button_text == "Höhe messen":
+            self.camera_screen.button_text = "Zurücksetzen"
+            self.camera_screen.icon = "refresh"
+            self.camera_screen.height_background_color = [0.3, 0.3, 0.3, 1]
+        else:
+            self.camera_screen.button_text = "Entfernung messen"
+            self.camera_screen.object_height = "-- m"
+            self.camera_screen.distance = "-- m"
+            self.camera_screen.icon = "arrow-expand-horizontal"
+            self.camera_screen.distance_background_color = [0, 0.3, 0, 1]
+
     def on_enter(self):
         """Verbindet die Kamera-Preview (falls vorhanden)."""
         if hasattr(self, 'ids') and 'preview' in self.ids:
@@ -154,27 +167,6 @@ class CameraApp(MDApp):
         Builder.load_file('main.kv')
         self.camera_screen = CameraScreen()
         return self.camera_screen
-
-    def measure(self):
-        """Schaltet den Messmodus um (Entfernung → Höhe → Reset).
-
-        Aktualisiert Button-Text, Icon und UI-Farben.
-        """
-        if self.camera_screen.button_text == "Entfernung messen":
-            self.camera_screen.button_text = "Höhe messen"
-            self.camera_screen.icon = "arrow-expand-vertical"
-            self.camera_screen.distance_background_color = [0.3, 0.3, 0.3, 1]
-            self.camera_screen.height_background_color = [0, 0.3, 0, 1]
-        elif self.camera_screen.button_text == "Höhe messen":
-            self.camera_screen.button_text = "Zurücksetzen"
-            self.camera_screen.icon = "refresh"
-            self.camera_screen.height_background_color = [0.3, 0.3, 0.3, 1]
-        else:
-            self.camera_screen.button_text = "Entfernung messen"
-            self.camera_screen.object_height = "-- m"
-            self.camera_screen.distance = "-- m"
-            self.camera_screen.icon = "arrow-expand-horizontal"
-            self.camera_screen.distance_background_color = [0, 0.3, 0, 1]
 
     def on_start(self):
         """Setzt unter Android Vollbild, initialisiert Berechtigungen und startet die Kamera."""
