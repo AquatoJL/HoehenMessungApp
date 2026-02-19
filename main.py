@@ -35,9 +35,9 @@ if platform == 'android':
 
 class CameraScreen(BoxLayout):
     """Haupt-Logik der Messansicht (Sensorwerte, Distanz- und Höhenberechnung)."""
-    accelX = StringProperty("X: 0.0")
-    accelY = StringProperty("Y: 0.0")
-    accelZ = StringProperty("Z: 0.0")
+    accel_x = NumericProperty(0.0)
+    accel_y = NumericProperty(0.0)
+    accel_z = NumericProperty(0.0)
 
     roll_angle = NumericProperty(0.0)
     tilt_angle = NumericProperty(0.0)
@@ -85,9 +85,9 @@ class CameraScreen(BoxLayout):
                 self.calculate_tilt(ax, ay, az)
                 self.roll_angle = math.degrees(math.atan2(ay, math.sqrt(ax*ax + az*az)))
 
-                self.accelX = f"X: {accel[0]:.2f}"
-                self.accelY = f"Y: {accel[1]:.2f}"
-                self.accelZ = f"Z: {accel[2]:.2f}"
+                self.accel_x = accel[0]
+                self.accel_y = accel[1]
+                self.accel_z = accel[2]
 
                 if self.button_text == "Entfernung messen":
                     self.calculate_distance()
@@ -123,13 +123,13 @@ class CameraScreen(BoxLayout):
         else:
             try:
                 object_height = self.phone_height + (float(self.distance.replace('m','').strip()) * math.tan(math.radians(self.tilt_angle-90)))
-                self.object_height = f"{abs(object_height):.2f} m"
+                self.object_height = f"{object_height:.2f} m"
             except:
                 self.object_height = "-- m"
 
     def toggle_mode(self):
         """Schaltet den Messmodus um (Entfernung → Höhe → Reset). Aktualisiert Button-Text, Icon und UI-Farben."""
-        if self.button_text == "Entfernung messen":
+        if self.button_text == "Entfernung messen" and self.distance != "-- m" and self.distance != "MAX" and self.accel_x < 0:
             self.button_text = "Höhe messen"
             self.icon = "arrow-expand-vertical"
             self.distance_background_color = [0.3, 0.3, 0.3, 1]
