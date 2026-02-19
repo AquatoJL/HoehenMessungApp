@@ -1,5 +1,5 @@
 [app]
-title = HöhenMessung
+title = Höhenmessung
 package.name = measure
 package.domain = org.example
 
@@ -7,7 +7,7 @@ source.dir = .
 source.include_exts = py,png,jpg,kv,atlas,json
 icon.filename = %(source.dir)s/icons/appIcon.png
 
-version = 0.3
+version = 1.0
 
 requirements = python3,kivy,kivymd,camera4kivy,gestures4kivy,plyer,android
 
