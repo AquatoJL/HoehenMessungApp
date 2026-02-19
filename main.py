@@ -129,7 +129,7 @@ class CameraScreen(BoxLayout):
 
     def toggle_mode(self):
         """Schaltet den Messmodus um (Entfernung → Höhe → Reset). Aktualisiert Button-Text, Icon und UI-Farben."""
-        if self.button_text == "Entfernung messen" and self.distance != "-- m" and self.distance != "MAX" and self.accel_x < 0:
+        if self.button_text == "Entfernung messen" and self.distance != "-- m" and self.distance != "MAX" and self.accel_x >= 0:
             self.button_text = "Höhe messen"
             self.icon = "arrow-expand-vertical"
             self.distance_background_color = [0.3, 0.3, 0.3, 1]
