@@ -109,11 +109,8 @@ class CameraScreen(BoxLayout):
         if self.tilt_angle >= 90:
             self.distance = "MAX"
         elif self.tilt_angle != 0:
-            try:
-                distance = self.phone_height * math.tan(math.radians(self.tilt_angle))
-                self.distance = f"{distance:.2f} m"
-            except:
-                self.distance = "-- m"
+            distance = self.phone_height * math.tan(math.radians(self.tilt_angle))
+            self.distance = f"{distance:.2f} m"
         else:
             self.distance = "-- m"
 
@@ -160,7 +157,7 @@ class CameraScreen(BoxLayout):
             self.ids.preview.disconnect_camera()
 
 class CameraApp(MDApp):
-    """KivyMD-App, die die KV lädt, `CameraScreen` verwaltet und den Messmodus umschaltet."""
+    """KivyMD-App, die die KV lädt, `CameraScreen` verwaltet und Android-spezifische Berechtigungen und Fullscreen-Modus handhabt."""
     def build(self):
         """Baut die App-Oberfläche auf, lädt KV-Datei und erstellt `CameraScreen`."""
         Window.orientation = 'landscape'
