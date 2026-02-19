@@ -157,7 +157,7 @@ class CameraScreen(BoxLayout):
             self.ids.preview.disconnect_camera()
 
 class CameraApp(MDApp):
-    """KivyMD-App, die die KV lädt, `CameraScreen` verwaltet und Android-spezifische Berechtigungen und Fullscreen-Modus handhabt."""
+    """KivyMD-App, die den App-Lebenszyklus steuert, Android-spezifische Berechtigungen und Fullscreen-Modus verwaltet sowie die Kamera startet/stoppt."""
     def build(self):
         """Baut die App-Oberfläche auf, lädt KV-Datei und erstellt `CameraScreen`."""
         Window.orientation = 'landscape'
