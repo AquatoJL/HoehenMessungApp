@@ -1,3 +1,18 @@
+# =============================================================================
+# main.kv
+# Beschreibung: GUI-Definition für den CameraScreen.
+# Zweck: Echtzeit-Kameraansicht mit Neigungssensor-Overlay und Messparameter-
+#        Panel zur trigonometrischen Entfernungs- und Höhenberechnung.
+# Layout: Horizontal geteilt – 75% Kamerabereich | 25% Seitenmenü
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Crosshair
+# Fadenkreuz-Widget, das zentriert über dem Kamerabild eingeblendet wird.
+# Dient zur visuellen Ausrichtung auf das Messobjekt.
+# Besteht aus einer weißen Linie (2px) mit schwarzer Outline (1px) für
+# maximalen Kontrast auf hellem und dunklem Hintergrund.
+# -----------------------------------------------------------------------------
 <Crosshair@MDWidget>:
     disabled: True
     size_hint: None, None
@@ -23,6 +38,11 @@
             width: 1
             points: root.center_x, root.center_y - root.height / 2, root.center_x, root.center_y + root.height / 2
 
+# -----------------------------------------------------------------------------
+# OwnIcon
+# Wiederverwendbares Icon-Widget (weiß, zentriert).
+# Basiert auf MDIcon mit fester Custom-Farbe für einheitliches Erscheinungsbild.
+# -----------------------------------------------------------------------------
 <OwnIcon@MDIcon>:
     theme_icon_color: "Custom"
     color: 1, 1, 1, 1
@@ -31,12 +51,22 @@
     text_size: self.size
     pos_hint: {"center_x": 1, "center_y": 0.5}
 
+# -----------------------------------------------------------------------------
+# OwnLabel
+# Standardbeschriftung (weiß, zentriert).
+# Wird für alle Bezeichnungen und Anzeigewerte im UI verwendet.
+# -----------------------------------------------------------------------------
 <OwnLabel@MDLabel>
     theme_text_color: "Custom"
     text_color: 1, 1, 1, 1
     halign: "center"
     valign: "middle"
 
+# -----------------------------------------------------------------------------
+# MeasureLabel
+# Großes Anzeigelabel für Messwerte wie Neigungswinkel.
+# Hebt numerische Messergebnisse visuell hervor.
+# -----------------------------------------------------------------------------
 <MeasureLabel@MDLabel>
     font_size: '40sp'
     theme_text_color: "Custom"
@@ -44,6 +74,11 @@
     halign: "center"
     valign: "middle"
 
+# -----------------------------------------------------------------------------
+# OwnBox
+# Horizontale Zeilenbox mit fester Höhe.
+# Dient als Basis-Container für einzeilige Parameter-Zeilen im Seitenmenü.
+# -----------------------------------------------------------------------------
 <OwnBox@MDBoxLayout>
     orientation: 'horizontal'
     size_hint_y: 1
@@ -51,18 +86,40 @@
     padding: [dp(8), 0]
     valign: "middle"
 
+# =============================================================================
+# CameraScreen
+# Hauptscreen der Anwendung. Horizontal aufgeteilt in:
+#   - Linker Bereich (75%): Kamera-Preview mit Overlay-Elementen
+#   - Rechter Bereich (25%): Eingabe- und Anzeigepanel für Messparameter
+# =============================================================================
+
 <CameraScreen>:
     orientation: 'horizontal'
     
+    # -------------------------------------------------------------------------
+    # Linker Bereich: Kamera-Preview mit Overlays (75% Breite)
+    # Enthält übereinander geschichtete Elemente via FloatLayout:
+    #   1. Preview      – Live-Kamerabild (Hintergrund)
+    #   2. Crosshair    – Fadenkreuz zur Zielanvisierung
+    #   3. GridLayout   – Sensor-Informationspanel (Neigung & Wasserwaage)
+    # -------------------------------------------------------------------------
     MDFloatLayout:
         size_hint_x: 0.75
         
+        # Live-Kamerabild; letterbox_color füllt Randbereiche schwarz
         Preview:
             id: preview
             letterbox_color: 0, 0, 0, 1
         
+        # Fadenkreuz-Overlay, zentriert im Kamerabild
         Crosshair:
         
+        # -----------------------------------------------------------------
+        # Sensor-Panel (2×2 Grid, unten-mittig positioniert)
+        # Zeile 1: Beschriftungen  "Neigung" | "Wasserwaage"
+        # Zeile 2: Messwerte       Neigungswinkel (numerisch) | Wasserwaage (grafisch)
+        # Hintergrund: halbtransparentes, abgerundetes Rechteck
+        # -----------------------------------------------------------------
         GridLayout:
             cols: 2
             rows: 2
@@ -82,17 +139,26 @@
                     size: self.size[0] + dp(15), self.size[1] 
                     radius: [12]
 
+            # Spalten-Beschriftungen
             OwnLabel:
                 text: "Neigung"
 
             OwnLabel:
                 text: "Wasserwaage"
 
+            # Numerischer Neigungswinkel (1 Dezimalstelle)
             MeasureLabel:
                 text: str(round(root.tilt_angle, 1))
 
+            # -----------------------------------------------------------------
+            # Grafische (Wasserwaage)
+            # Grüner Hintergrundbalken mit zwei schwarzen Begrenzungslinien
+            # (Toleranzbereich). Ein grüner Kreis (Blase) bewegt sich
+            # proportional zum roll_angle horizontal – zeigt Querneigung an.
+            # -----------------------------------------------------------------
             MeasureLabel:
                 canvas.before:
+                    # Grüner Hintergrund
                     Color:
                         rgba: 0, 0.5, 0, 1
                     Rectangle:
@@ -101,13 +167,16 @@
                     
                     Color:
                         rgba: 0, 0, 0, 1
+                    # Linke Toleranzlinie
                     Line:
                         width: 1
                         points: [self.center_x-dp(20), self.y, self.center_x-dp(20), self.top]
+                    # Rechte Toleranzlinie
                     Line:
                         width: 1
                         points: [self.center_x+dp(20), self.y, self.center_x+dp(20), self.top]
                 
+                # Bewegliche Blase: Position abhängig von root.roll_angle
                 canvas:
                     Color:
                         rgba: 0.3, 1, 0.3, 0.7
@@ -115,6 +184,14 @@
                         pos: self.center_x + -root.roll_angle * dp(0.57) - dp(8), self.center_y - dp(8)
                         size: dp(16), dp(16)
     
+    # =========================================================================
+    # Rechter Bereich: Messparameter-Panel (25% Breite)
+    # Dunkles vertikales Layout mit Eingabe- und Anzeigezeilen für:
+    #   - Telefonhöhe (editierbar)
+    #   - Entfernung  (berechnet, nur Anzeige)
+    #   - Höhe        (berechnet, nur Anzeige)
+    # Abschluss: Mess-Button zum Starten der Berechnung
+    # =========================================================================
     MDBoxLayout:
         orientation: 'vertical'
         size_hint_x: 0.25
@@ -128,8 +205,11 @@
                 pos: self.pos
                 size: self.size
 
+        # Oberer Abstandhalter
         Widget:
 
+        # --- Telefonhöhe (Anzeige, nur lesbar) -------------------------------------------
+        # Beschriftungszeile
         OwnBox:
             canvas.before:
                 Color:
@@ -142,6 +222,8 @@
             OwnLabel:
                 text: "Telefonhöhe"
 
+        # Eingabezeile: Icon | TextInput | Einheit "m"
+        # on_text_validate überträgt den eingegebenen Wert in root.phone_height
         OwnBox:
             canvas.before:
                 Color:
@@ -174,7 +256,7 @@
                 text: "m"
                 size_hint_x: 0.3
 
-        
+        # --- Entfernung-Label (Anzeige, nur lesbar) ----------------------------
         OwnBox:
             canvas.before:
                 Color:
@@ -187,6 +269,7 @@
             OwnLabel:
                 text: "Entfernung"
 
+        # --- Entfernung-Werte (Anzeige, nur lesbar) ----------------------------
         OwnBox:
             canvas.before:
                 Color:
@@ -205,6 +288,7 @@
             OwnLabel:
                 text: root.distance
 
+        # --- Höhe-Label (Anzeige, nur lesbar) ---------------------------------
         OwnBox:
             canvas.before:
                 Color:
@@ -216,7 +300,8 @@
             
             OwnLabel:
                 text: "Höhe"
-        
+
+        # --- Höhe-Werte (Anzeige, nur lesbar) --------------------------------------
         OwnBox:
             canvas.before:
                 Color:
@@ -235,6 +320,9 @@
             OwnLabel:
                 text: root.object_height
 
+        # --- Mess-Button -----------------------------------------------------
+        # Startet die Messung via app.measure().
+        # Text und Icon werden dynamisch über root-Properties gesteruert.
         MDFillRoundFlatIconButton:
             text: root.button_text
             icon: root.icon
@@ -244,4 +332,5 @@
             md_bg_color: 0.7, 0, 0, 1
             on_press: root.toggle_mode()
 
+        # Unterer Abstandhalter
         Widget:
