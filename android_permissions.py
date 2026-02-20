@@ -1,3 +1,4 @@
+# Von Jordan
 from kivy.utils import platform
 from kivy.clock import mainthread
 

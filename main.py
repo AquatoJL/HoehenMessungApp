@@ -25,7 +25,7 @@ if platform == 'android':
     View = autoclass('android.view.View')
 
     @run_on_ui_thread
-    def set_fullscreen(instance, width, height):
+    def set_fullscreen(instance, width, height): # Von Jordan
         """Setzt die Android-UI in den Fullscreen/Immersive-Modus."""
         mActivity.getWindow().getDecorView().setSystemUiVisibility(
             View.SYSTEM_UI_FLAG_FULLSCREEN |
@@ -35,6 +35,8 @@ if platform == 'android':
 
 class CameraScreen(BoxLayout):
     """Haupt-Logik der Messansicht (Sensorwerte, Distanz- und Höhenberechnung)."""
+
+    # Properties von Colin
     accel_x = NumericProperty(0.0)
     accel_y = NumericProperty(0.0)
     accel_z = NumericProperty(0.0)
@@ -52,7 +54,7 @@ class CameraScreen(BoxLayout):
     distance_background_color = ListProperty([0, 0.3, 0, 1])
     height_background_color = ListProperty([0.3, 0.3, 0.3, 1])
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs): # Von Colin
         """Initialisiert Einstellungen, lädt Telefonhöhe und startet Sensor-Updates."""
         super().__init__(**kwargs)
         self.settings = AppSettings("hoehenmessung")
@@ -60,14 +62,14 @@ class CameraScreen(BoxLayout):
         if SENSORS_AVAILABLE:
             self.start_sensor_updates()
 
-    def on_phone_height(self, instance, value):
-        """Validiert und begrenzt die Gerätehöhe auf 1,0–2,0 m und speichert sie persistent."""
+    def on_phone_height(self, instance, value): # Von Colin
+        """Validiert und begrenzt die Gerätehöhe auf 1,0-2,0 m und speichert sie persistent."""
         valid_height = max(1.0, min(2.0, value))
         if value != valid_height:
             self.phone_height = valid_height
         self.settings.set('phone_height', valid_height)
 
-    def start_sensor_updates(self):
+    def start_sensor_updates(self): # Von Marvin
         """Aktiviert den Accelerometer und registriert die periodische Aktualisierungen über die Kivy-Clock."""
         try:
             accelerometer.enable()
@@ -75,8 +77,8 @@ class CameraScreen(BoxLayout):
             return
         Clock.schedule_interval(self.update_sensors, 0.1)
 
-    def update_sensors(self, dt):
-        """Liest aktuelle Sensorwerte, berechnet Tilt/Roll und aktualisiert die Properties sowie Distanz bzw. Objekt­höhe abhängig vom Status."""
+    def update_sensors(self, dt): # Von Marvin und Jordan
+        """Liest aktuelle Sensorwerte, berechnet Tilt/Roll und aktualisiert die Properties sowie Distanz bzw. Objekthöhe abhängig vom Status."""
         try:
             accel = accelerometer.acceleration[:3]
             if not accel == (None, None, None):
@@ -96,7 +98,7 @@ class CameraScreen(BoxLayout):
         except:
             pass
 
-    def calculate_tilt(self, ax, ay, az):
+    def calculate_tilt(self, ax, ay, az): # Von Jordan
         """Berechnet den Neigungswinkel aus Accelerometer-Daten."""
         accel_magnitude = math.sqrt(ax*ax + ay*ay + az*az)
         if accel_magnitude > 0:
@@ -104,7 +106,7 @@ class CameraScreen(BoxLayout):
         else:
             self.tilt_angle = 0
     
-    def calculate_distance(self):
+    def calculate_distance(self): # Von Jordan
         """Berechnet die Entfernung aus Telefonhöhe und Neigungswinkel oder setzt Sonderwerte ("MAX", "-- m")."""
         if self.tilt_angle >= 90:
             self.distance = "MAX"
@@ -114,7 +116,7 @@ class CameraScreen(BoxLayout):
         else:
             self.distance = "-- m"
 
-    def calculate_object_height(self):
+    def calculate_object_height(self): # Von Jordan
         """Berechnet die Objekt-Höhe anhand gespeicherter Entfernung und aktuellem Neigungswinkel."""
         if self.tilt_angle < 10:
             self.object_height = "MIN"
@@ -127,7 +129,7 @@ class CameraScreen(BoxLayout):
             except:
                 self.object_height = "-- m"
 
-    def toggle_mode(self):
+    def toggle_mode(self): # Von Colin
         """Schaltet den Messmodus um (Entfernung → Höhe → Reset). Aktualisiert Button-Text, Icon und UI-Farben."""
         if self.button_text == "Entfernung messen" and self.distance != "-- m" and self.distance != "MAX" and self.accel_x >= 0:
             self.button_text = "Höhe messen"
@@ -145,18 +147,18 @@ class CameraScreen(BoxLayout):
             self.icon = "arrow-expand-horizontal"
             self.distance_background_color = [0, 0.3, 0, 1]
 
-    def on_enter(self):
+    def on_enter(self): # Von Jordan
         """Verbindet die Kamera-Preview (falls vorhanden)."""
         if hasattr(self, 'ids') and 'preview' in self.ids:
             self.ids.preview.connect_camera()
             self.ids.preview.allow_stretch = True
 
-    def on_leave(self):
+    def on_leave(self): # Von Jordan
         """Trennt die Kamera-Preview (falls vorhanden)."""
         if hasattr(self, 'ids') and 'preview' in self.ids:
             self.ids.preview.disconnect_camera()
 
-class CameraApp(MDApp):
+class CameraApp(MDApp): # Von Jordan
     """KivyMD-App, die den App-Lebenszyklus steuert, Android-spezifische Berechtigungen und Fullscreen-Modus verwaltet sowie die Kamera startet/stoppt."""
     def build(self):
         """Baut die App-Oberfläche auf, lädt KV-Datei und erstellt `CameraScreen`."""
@@ -165,7 +167,7 @@ class CameraApp(MDApp):
         self.camera_screen = CameraScreen()
         return self.camera_screen
 
-    def on_start(self):
+    def on_start(self): # Von Jordan
         """Setzt unter Android Vollbild, initialisiert Berechtigungen und startet die Kamera."""
         if platform == 'android':
             Window.bind(on_resize=set_fullscreen)
@@ -174,12 +176,12 @@ class CameraApp(MDApp):
         else:
             self.start_camera()
 
-    def on_stop(self):
+    def on_stop(self): # Von Jordan
         """Ruft on_leave() auf, um die Kamera zu stoppen."""
         if hasattr(self.camera_screen, 'on_leave'):
             self.camera_screen.on_leave()
 
-    def start_camera(self):
+    def start_camera(self): # Von Jordan
         """Ruft on_enter() auf, um die Kamera zu starten."""
         self.dont_gc = None
         if hasattr(self.camera_screen, 'on_enter'):
