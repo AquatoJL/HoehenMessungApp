@@ -14,7 +14,7 @@ requirements = python3,kivy,kivymd,camera4kivy,gestures4kivy,plyer,android
 orientation = landscape
 fullscreen = 0
 
-android.permissions = CAMERA,WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE
+android.permissions = CAMERA,WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE,BODY_SENSORS,ACCESS_FINE_LOCATION
 android.api = 33
 android.minapi = 21
 android.ndk = 25b
