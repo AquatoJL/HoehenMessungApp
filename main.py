@@ -88,7 +88,7 @@ class CameraScreen(BoxLayout):
                 ax, ay, az = accel
                 azimuth, pitch, roll = orientation
                 
-                # self.calculate_tilt(ax, ay, az)
+                #self.calculate_tilt(ax, ay, az)
                 self.tilt_angle = pitch
                 self.roll_angle = math.degrees(math.atan2(ay, math.sqrt(ax*ax + az*az)))
 
