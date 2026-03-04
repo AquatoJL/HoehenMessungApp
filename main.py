@@ -75,7 +75,6 @@ class CameraScreen(BoxLayout):
         try:
             accelerometer.enable()
             SpatialOrientation.enable()
-            SpatialOrientation.enable_listener()
         except:
             return
         Clock.schedule_interval(self.update_sensors, 0.1)
