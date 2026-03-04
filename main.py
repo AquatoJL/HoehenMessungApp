@@ -12,7 +12,6 @@ import math
 
 try:
     from plyer import accelerometer
-    from plyer import SpatialOrientation
     SENSORS_AVAILABLE = True
 except ImportError:
     SENSORS_AVAILABLE = False
@@ -74,7 +73,6 @@ class CameraScreen(BoxLayout):
         """Aktiviert den Accelerometer und registriert die periodische Aktualisierungen über die Kivy-Clock."""
         try:
             accelerometer.enable()
-            SpatialOrientation.enable()
         except:
             return
         Clock.schedule_interval(self.update_sensors, 0.1)
@@ -83,13 +81,10 @@ class CameraScreen(BoxLayout):
         """Liest aktuelle Sensorwerte, berechnet Tilt/Roll und aktualisiert die Properties sowie Distanz bzw. Objekthöhe abhängig vom Status."""
         try:
             accel = accelerometer.acceleration[:3]
-            orientation = SpatialOrientation.orientation
             if not accel == (None, None, None):
                 ax, ay, az = accel
-                azimuth, pitch, roll = orientation
                 
-                #self.calculate_tilt(ax, ay, az)
-                self.tilt_angle = pitch
+                self.calculate_tilt(ax, ay, az)
                 self.roll_angle = math.degrees(math.atan2(ay, math.sqrt(ax*ax + az*az)))
 
                 self.accel_x = accel[0]
